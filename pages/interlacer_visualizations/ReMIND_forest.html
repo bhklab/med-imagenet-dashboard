@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.223550059308954242101797620720867911711", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-110\nSeries: 1.3.6.1.4.1.14519.5.2.1.223550059308954242101797620720867911711"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.29953956324093501090477197494214466815", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-088\nSeries: 1.3.6.1.4.1.14519.5.2.1.29953956324093501090477197494214466815"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.290349993995566951774801380128244498802", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-014\nSeries: 1.3.6.1.4.1.14519.5.2.1.290349993995566951774801380128244498802"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.102189573014415823113993827123934909680", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-057\nSeries: 1.3.6.1.4.1.14519.5.2.1.102189573014415823113993827123934909680"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.90602379007134832305233087131767229764", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-085\nSeries: 1.3.6.1.4.1.14519.5.2.1.90602379007134832305233087131767229764"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.256244424638062944875982387410496785552", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-074\nSeries: 1.3.6.1.4.1.14519.5.2.1.256244424638062944875982387410496785552"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.311950293504700714357757329753180031676", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-046\nSeries: 1.3.6.1.4.1.14519.5.2.1.311950293504700714357757329753180031676"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.309728484268906459931659861543217742776", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-104\nSeries: 1.3.6.1.4.1.14519.5.2.1.309728484268906459931659861543217742776"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.213006052495527228663055834025563334078", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-037\nSeries: 1.3.6.1.4.1.14519.5.2.1.213006052495527228663055834025563334078"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.215219507907264712612116626852316675947", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-090\nSeries: 1.3.6.1.4.1.14519.5.2.1.215219507907264712612116626852316675947"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.306515730927110494169956826176606509565", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-100\nSeries: 1.3.6.1.4.1.14519.5.2.1.306515730927110494169956826176606509565"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.139266714863272118992707376901697991463", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-044\nSeries: 1.3.6.1.4.1.14519.5.2.1.139266714863272118992707376901697991463"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.225142382387314489792216948116995674339", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-012\nSeries: 1.3.6.1.4.1.14519.5.2.1.225142382387314489792216948116995674339"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.105178906925519222029675675357635322480", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-013\nSeries: 1.3.6.1.4.1.14519.5.2.1.105178906925519222029675675357635322480"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.211410257936611293543903932110189388744", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-090\nSeries: 1.3.6.1.4.1.14519.5.2.1.211410257936611293543903932110189388744"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.134061671453609869875210365239292226592", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-001\nSeries: 1.3.6.1.4.1.14519.5.2.1.134061671453609869875210365239292226592"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.110512503449981733949719588849234880460", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-016\nSeries: 1.3.6.1.4.1.14519.5.2.1.110512503449981733949719588849234880460"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.177522518413052857600665623007356658656", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-004\nSeries: 1.3.6.1.4.1.14519.5.2.1.177522518413052857600665623007356658656"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.254848092610220698666856229320117600606", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-025\nSeries: 1.3.6.1.4.1.14519.5.2.1.254848092610220698666856229320117600606"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.74656331281011930915611446233606666636", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-077\nSeries: 1.3.6.1.4.1.14519.5.2.1.74656331281011930915611446233606666636"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.316966835611972313319612250207939607836", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-035\nSeries: 1.3.6.1.4.1.14519.5.2.1.316966835611972313319612250207939607836"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.139644862561089451757169831849968981723", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-084\nSeries: 1.3.6.1.4.1.14519.5.2.1.139644862561089451757169831849968981723"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.22170270874912661638837921250285401241", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-084\nSeries: 1.3.6.1.4.1.14519.5.2.1.22170270874912661638837921250285401241"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.290297672789335656204772410048742146723", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-039\nSeries: 1.3.6.1.4.1.14519.5.2.1.290297672789335656204772410048742146723"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.121658245171441438543046499864379137663", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-063\nSeries: 1.3.6.1.4.1.14519.5.2.1.121658245171441438543046499864379137663"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.178131951857955917412589543399532395260", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-023\nSeries: 1.3.6.1.4.1.14519.5.2.1.178131951857955917412589543399532395260"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.153549911340620831522581502414426066946", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-024\nSeries: 1.3.6.1.4.1.14519.5.2.1.153549911340620831522581502414426066946"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.241334471827869432616792226828288731644", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-106\nSeries: 1.3.6.1.4.1.14519.5.2.1.241334471827869432616792226828288731644"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.216529436812350101582905594489395554981", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-086\nSeries: 1.3.6.1.4.1.14519.5.2.1.216529436812350101582905594489395554981"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.298054064819897900913108680174846116982", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-018\nSeries: 1.3.6.1.4.1.14519.5.2.1.298054064819897900913108680174846116982"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.1863932920648477196860133774830322365", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-098\nSeries: 1.3.6.1.4.1.14519.5.2.1.1863932920648477196860133774830322365"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.214602788120583112215766308939954350416", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-041\nSeries: 1.3.6.1.4.1.14519.5.2.1.214602788120583112215766308939954350416"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.279920891976570769032238351642089807300", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-088\nSeries: 1.3.6.1.4.1.14519.5.2.1.279920891976570769032238351642089807300"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.296910998778755813525350666396245461299", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-082\nSeries: 1.3.6.1.4.1.14519.5.2.1.296910998778755813525350666396245461299"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.320840937609085446532129498069295799348", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-047\nSeries: 1.3.6.1.4.1.14519.5.2.1.320840937609085446532129498069295799348"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.336569087948440709969657698622467428860", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-096\nSeries: 1.3.6.1.4.1.14519.5.2.1.336569087948440709969657698622467428860"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.262892059263543734834463419322576983188", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-108\nSeries: 1.3.6.1.4.1.14519.5.2.1.262892059263543734834463419322576983188"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.316873487626028672388252719832169828468", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-041\nSeries: 1.3.6.1.4.1.14519.5.2.1.316873487626028672388252719832169828468"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.203358765267234045641494108066491494802", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-001\nSeries: 1.3.6.1.4.1.14519.5.2.1.203358765267234045641494108066491494802"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.71638857086763189767013222720471188344", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-092\nSeries: 1.3.6.1.4.1.14519.5.2.1.71638857086763189767013222720471188344"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.61515282255267292127249531470857865214", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-109\nSeries: 1.3.6.1.4.1.14519.5.2.1.61515282255267292127249531470857865214"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.62464711454380494708196970212362011665", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-079\nSeries: 1.3.6.1.4.1.14519.5.2.1.62464711454380494708196970212362011665"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.123038217901682405474355404318723613648", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-066\nSeries: 1.3.6.1.4.1.14519.5.2.1.123038217901682405474355404318723613648"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.161472760706931214259782939893207877570", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-079\nSeries: 1.3.6.1.4.1.14519.5.2.1.161472760706931214259782939893207877570"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.143851123065629597209023000758912871355", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-051\nSeries: 1.3.6.1.4.1.14519.5.2.1.143851123065629597209023000758912871355"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.11846303141267075853538543303791885152", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-114\nSeries: 1.3.6.1.4.1.14519.5.2.1.11846303141267075853538543303791885152"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.329216126439312156340059277227365973772", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-079\nSeries: 1.3.6.1.4.1.14519.5.2.1.329216126439312156340059277227365973772"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.140709494211167387852633394317388520491", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-114\nSeries: 1.3.6.1.4.1.14519.5.2.1.140709494211167387852633394317388520491"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.89147598429951022027783579158354991304", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-062\nSeries: 1.3.6.1.4.1.14519.5.2.1.89147598429951022027783579158354991304"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.156939989779125812680939507378043784847", "label": "MR", "shape": "dot", "title": "PatientID: ReMIND-001\nSeries: 1.3.6.1.4.1.14519.5.2.1.156939989779125812680939507378043784847"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

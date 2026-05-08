@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.142359835910282542594455331263", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-1103\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.142359835910282542594455331263"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.155915370898622918520510614751", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2393\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.155915370898622918520510614751"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.176986118151158985563762360633", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1738\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.176986118151158985563762360633"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.127615840833023988607416770448", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1903\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.127615840833023988607416770448"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.325458772291337623283029918977", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2399\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.325458772291337623283029918977"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.285873027213658454402713735624", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1633\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.285873027213658454402713735624"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.312231947531457814882947757980", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2398\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.312231947531457814882947757980"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.284292378662739116241242143388", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2398\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.284292378662739116241242143388"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.208350474332846176537469759951", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2391\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.208350474332846176537469759951"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.143291441684557269612590326828", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-0911\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.143291441684557269612590326828"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.165280450274546356670193715391", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1727\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.165280450274546356670193715391"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.284482046399290192171836595173", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1727\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.284482046399290192171836595173"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.900196864682586841523571385464", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-2055\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.900196864682586841523571385464"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.330618046672149094076412190457", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1901\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.330618046672149094076412190457"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8421.4007.296116184050832469442943461899", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-OY-A56P\nSeries: 1.3.6.1.4.1.14519.5.2.1.8421.4007.296116184050832469442943461899"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.198578663575276752274415828880", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1901\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.198578663575276752274415828880"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.328171552446436100829899218680", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2409\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.328171552446436100829899218680"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.325238787921322288232847947894", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2398\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.325238787921322288232847947894"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.264735605171273124427387982859", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1635\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.264735605171273124427387982859"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.192108809621484586634912883919", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2391\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.192108809621484586634912883919"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.784414718301770931346708795696", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-1673\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.784414718301770931346708795696"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.248154618404090934168213371118", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-1408\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.248154618404090934168213371118"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.187918220313430110002172978314", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2398\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.187918220313430110002172978314"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.295257090624575505264184473973", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-1675\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.295257090624575505264184473973"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.224364478696459336416934992454", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-1667\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.224364478696459336416934992454"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.334829156290806024490633081895", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-0904\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.334829156290806024490633081895"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.145321142435712189794356824065", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-1413\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.145321142435712189794356824065"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.243446782353253568157046630182", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-2614\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.243446782353253568157046630182"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.980459850421854571553841494517", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1633\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.980459850421854571553841494517"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.167602098362615694209127316695", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-1418\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.167602098362615694209127316695"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.1706.4007.298976495847702678277871665701", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-10-0936\nSeries: 1.3.6.1.4.1.14519.5.2.1.1706.4007.298976495847702678277871665701"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.111996269471516004498652150810", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1315\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.111996269471516004498652150810"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.110813253700068613500459535343", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-2391\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.110813253700068613500459535343"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.339330253246714020730480967871", "label": "MR", "shape": "dot", "title": "PatientID: TCGA-24-1423\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.339330253246714020730480967871"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.113593668472384795211017475871", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-2003\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.113593668472384795211017475871"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.407184858975361782255154046300", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1626\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.407184858975361782255154046300"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.117922260284660355545671994419", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-0807\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.117922260284660355545671994419"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.283579832231923089733615523787", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-1614\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.283579832231923089733615523787"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.199247111106739727621563715558", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-0966\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.199247111106739727621563715558"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.108776544311749093810275955919", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-24-0975\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.108776544311749093810275955919"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.6450.4007.323744839751786793565770870252", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-61-1901\nSeries: 1.3.6.1.4.1.14519.5.2.1.6450.4007.323744839751786793565770870252"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7777.4007.271724319240538699553409866030", "label": "MR", "shape": "dot", "title": "PatientID: TCGA-24-1423\nSeries: 1.3.6.1.4.1.14519.5.2.1.7777.4007.271724319240538699553409866030"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.624561083715729917122985354765", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-1484\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.624561083715729917122985354765"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.152273649918555477428311648083", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-2050\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.152273649918555477428311648083"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.623807163663118231881895673844", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1316\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.623807163663118231881895673844"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.101691442784818612512523150552", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1628\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.101691442784818612512523150552"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.364337473777234809196391358145", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1323\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.364337473777234809196391358145"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4007.297365799477676949902627299114", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-09-2055\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4007.297365799477676949902627299114"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.3344.4007.199663796941627482032232558355", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-25-1626\nSeries: 1.3.6.1.4.1.14519.5.2.1.3344.4007.199663796941627482032232558355"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9203.4007.652084833437728572018249345037", "label": "CT", "shape": "dot", "title": "PatientID: TCGA-13-1410\nSeries: 1.3.6.1.4.1.14519.5.2.1.9203.4007.652084833437728572018249345037"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

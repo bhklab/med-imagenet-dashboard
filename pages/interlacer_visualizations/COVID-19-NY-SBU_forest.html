@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.11427778968125739560769163382179", "label": "CT", "shape": "dot", "title": "PatientID: A417522\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.11427778968125739560769163382179"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.19891666975266841737460261957859", "label": "CT", "shape": "dot", "title": "PatientID: A466369\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.19891666975266841737460261957859"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.16175980312173718557608578560590", "label": "CT", "shape": "dot", "title": "PatientID: A534059\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.16175980312173718557608578560590"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.65880725035673096883063513497235", "label": "CT", "shape": "dot", "title": "PatientID: A190935\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.65880725035673096883063513497235"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.10696493809682644291385468156346", "label": "CT", "shape": "dot", "title": "PatientID: A951074\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.10696493809682644291385468156346"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.32775653329154843806680315137610", "label": "CT", "shape": "dot", "title": "PatientID: A002304\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.32775653329154843806680315137610"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.27259566389583532475876261340639", "label": "CT", "shape": "dot", "title": "PatientID: A901257\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.27259566389583532475876261340639"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.27352112547995781640726867039618", "label": "CT", "shape": "dot", "title": "PatientID: A768565\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.27352112547995781640726867039618"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.18368146101398681515676728970855", "label": "CT", "shape": "dot", "title": "PatientID: A072894\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.18368146101398681515676728970855"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.83712142242126685980836013014364", "label": "CT", "shape": "dot", "title": "PatientID: A128514\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.83712142242126685980836013014364"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.12120467255678926862569467701230", "label": "CT", "shape": "dot", "title": "PatientID: A540132\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.12120467255678926862569467701230"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.77301487960023574289119045399401", "label": "CT", "shape": "dot", "title": "PatientID: A562171\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.77301487960023574289119045399401"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.33436230607014754910438320382076", "label": "CT", "shape": "dot", "title": "PatientID: A549020\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.33436230607014754910438320382076"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.17185066088639048509786060498956", "label": "CT", "shape": "dot", "title": "PatientID: A758961\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.17185066088639048509786060498956"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.34133654575476241966899917843306", "label": "CT", "shape": "dot", "title": "PatientID: A464604\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.34133654575476241966899917843306"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.21904589610767108753578322157611", "label": "CT", "shape": "dot", "title": "PatientID: A757672\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.21904589610767108753578322157611"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.53056371344586062752420724899397", "label": "CT", "shape": "dot", "title": "PatientID: A232246\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.53056371344586062752420724899397"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.13299532208444347135758214333605", "label": "CT", "shape": "dot", "title": "PatientID: A894285\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.13299532208444347135758214333605"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.27670870364294818993356885258757", "label": "CT", "shape": "dot", "title": "PatientID: A878067\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.27670870364294818993356885258757"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.24777253413760614321605375614588", "label": "CT", "shape": "dot", "title": "PatientID: A768042\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.24777253413760614321605375614588"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.17855332577758228399362075830125", "label": "CT", "shape": "dot", "title": "PatientID: A161314\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.17855332577758228399362075830125"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.31057426457777476805646941461932", "label": "CT", "shape": "dot", "title": "PatientID: A951599\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.31057426457777476805646941461932"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.18171023189850234777105953686763", "label": "CT", "shape": "dot", "title": "PatientID: A951074\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.18171023189850234777105953686763"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.27083184485322621542608516457414", "label": "CT", "shape": "dot", "title": "PatientID: A770557\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.27083184485322621542608516457414"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.31497275332438938550590983489486", "label": "CT", "shape": "dot", "title": "PatientID: A237029\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.31497275332438938550590983489486"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.89618049744259299388769742933387", "label": "CT", "shape": "dot", "title": "PatientID: A035815\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.89618049744259299388769742933387"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.20480649136352006189947469312206", "label": "CT", "shape": "dot", "title": "PatientID: A729169\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.20480649136352006189947469312206"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.32151553161495896630495213850966", "label": "CT", "shape": "dot", "title": "PatientID: A660468\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.32151553161495896630495213850966"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.36525991032379981735845425265753", "label": "CT", "shape": "dot", "title": "PatientID: A925089\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.36525991032379981735845425265753"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.18787767507957981454947589310506", "label": "CT", "shape": "dot", "title": "PatientID: A577419\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.18787767507957981454947589310506"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.46004733700192298377932489305372", "label": "CT", "shape": "dot", "title": "PatientID: A813763\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.46004733700192298377932489305372"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.28342813762331138910183457959802", "label": "CT", "shape": "dot", "title": "PatientID: A040293\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.28342813762331138910183457959802"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.19687713149544102483445861809236", "label": "CT", "shape": "dot", "title": "PatientID: A821176\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.19687713149544102483445861809236"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.81201101568802340215825050184621", "label": "CT", "shape": "dot", "title": "PatientID: A485648\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.81201101568802340215825050184621"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.12012720771279921937786634782866", "label": "CT", "shape": "dot", "title": "PatientID: A072894\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.12012720771279921937786634782866"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.42716273351075404398501562459165", "label": "CT", "shape": "dot", "title": "PatientID: A780838\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.42716273351075404398501562459165"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.75544586839959617533943905342384", "label": "CT", "shape": "dot", "title": "PatientID: A363883\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.75544586839959617533943905342384"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.25167871735432616487584720634969", "label": "CT", "shape": "dot", "title": "PatientID: A572854\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.25167871735432616487584720634969"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.26599065150833132354131196509459", "label": "CT", "shape": "dot", "title": "PatientID: A780880\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.26599065150833132354131196509459"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.74125962275835712589298730836013", "label": "CT", "shape": "dot", "title": "PatientID: A968238\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.74125962275835712589298730836013"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.31970336367889120535301591284746", "label": "CT", "shape": "dot", "title": "PatientID: A670621\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.31970336367889120535301591284746"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.18701510928166812151440449033693", "label": "CT", "shape": "dot", "title": "PatientID: A198259\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.18701510928166812151440449033693"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.40673247914996703806403925896005", "label": "CT", "shape": "dot", "title": "PatientID: A680757\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.40673247914996703806403925896005"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.13852070928790985419527111947182", "label": "CT", "shape": "dot", "title": "PatientID: A297208\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.13852070928790985419527111947182"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.93746775276864529071673245229378", "label": "CT", "shape": "dot", "title": "PatientID: A421290\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.93746775276864529071673245229378"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.18117585984192627902102802929413", "label": "CT", "shape": "dot", "title": "PatientID: A724565\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.18117585984192627902102802929413"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.16884495102891394170413535079165", "label": "CT", "shape": "dot", "title": "PatientID: A724565\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.16884495102891394170413535079165"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.34728510482799650059122741237813", "label": "CT", "shape": "dot", "title": "PatientID: A437957\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.34728510482799650059122741237813"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.25823716056361050371853631144811", "label": "CT", "shape": "dot", "title": "PatientID: A638206\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.25823716056361050371853631144811"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.99.1071.23002643528983470959637836040757", "label": "CT", "shape": "dot", "title": "PatientID: A698900\nSeries: 1.3.6.1.4.1.14519.5.2.1.99.1071.23002643528983470959637836040757"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

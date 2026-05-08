@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.183617984992489827790064738891", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000582\nSeries: 1.2.826.0.1.3680043.10.474.419639.183617984992489827790064738891"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.224750711474646487994278272431", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001085\nSeries: 1.2.826.0.1.3680043.10.474.419639.224750711474646487994278272431"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.930", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000011\nSeries: 1.2.826.0.1.3680043.10.474.440808.930"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.314225774870643467895194110651", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000082\nSeries: 1.2.826.0.1.3680043.10.474.419639.314225774870643467895194110651"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.2284746543076837897690906912301467211", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000248\nSeries: 1.2.826.0.1.3680043.10.474.2284746543076837897690906912301467211"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.9331758659797359036591176144184201421", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000119\nSeries: 1.2.826.0.1.3680043.10.474.9331758659797359036591176144184201421"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.2646", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000010\nSeries: 1.2.826.0.1.3680043.10.474.440808.2646"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1327296678591867297098577217690671388", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000245\nSeries: 1.2.826.0.1.3680043.10.474.1327296678591867297098577217690671388"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.176096950772217947067015196061", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001155\nSeries: 1.2.826.0.1.3680043.10.474.419639.176096950772217947067015196061"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.2590645535137319750932121924162213735", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000020\nSeries: 1.2.826.0.1.3680043.10.474.2590645535137319750932121924162213735"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.328998138184426734152305370289", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000906\nSeries: 1.2.826.0.1.3680043.10.474.419639.328998138184426734152305370289"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.309449847293673828142743979979", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000361\nSeries: 1.2.826.0.1.3680043.10.474.419639.309449847293673828142743979979"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.2924", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000008\nSeries: 1.2.826.0.1.3680043.10.474.440808.2924"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.130776478798117741008769761568", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000800\nSeries: 1.2.826.0.1.3680043.10.474.419639.130776478798117741008769761568"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1219518442436631415928824923898546304", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000275\nSeries: 1.2.826.0.1.3680043.10.474.1219518442436631415928824923898546304"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1511208260078690435549763845742171873", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000187\nSeries: 1.2.826.0.1.3680043.10.474.1511208260078690435549763845742171873"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.660042.1826", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-660042-000008\nSeries: 1.2.826.0.1.3680043.10.474.660042.1826"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.127246153223563456396967204910", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001155\nSeries: 1.2.826.0.1.3680043.10.474.419639.127246153223563456396967204910"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.660042.11240", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-660042-000049\nSeries: 1.2.826.0.1.3680043.10.474.660042.11240"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.819438105095473069247380380926", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001336\nSeries: 1.2.826.0.1.3680043.10.474.419639.819438105095473069247380380926"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.166011720264886300637357651165", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001533\nSeries: 1.2.826.0.1.3680043.10.474.419639.166011720264886300637357651165"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.2840", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000015\nSeries: 1.2.826.0.1.3680043.10.474.440808.2840"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.112540773008110395988181223992", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001446\nSeries: 1.2.826.0.1.3680043.10.474.419639.112540773008110395988181223992"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.248273095129288669123765819679", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001085\nSeries: 1.2.826.0.1.3680043.10.474.419639.248273095129288669123765819679"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.689197686214923485781691870218", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000800\nSeries: 1.2.826.0.1.3680043.10.474.419639.689197686214923485781691870218"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1722437102633165578176196600274339947", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000023\nSeries: 1.2.826.0.1.3680043.10.474.1722437102633165578176196600274339947"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.227193511798500971186216994442", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001476\nSeries: 1.2.826.0.1.3680043.10.474.419639.227193511798500971186216994442"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.108518937868403894887894311320", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000082\nSeries: 1.2.826.0.1.3680043.10.474.419639.108518937868403894887894311320"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.570", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000006\nSeries: 1.2.826.0.1.3680043.10.474.440808.570"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1844069772921163376570177904092162187", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000051\nSeries: 1.2.826.0.1.3680043.10.474.1844069772921163376570177904092162187"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.2415116627675626052411242686858006733", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000239\nSeries: 1.2.826.0.1.3680043.10.474.2415116627675626052411242686858006733"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.2251992363251251570040844138307800632", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000048\nSeries: 1.2.826.0.1.3680043.10.474.2251992363251251570040844138307800632"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.3191761158175385619222890930533119774", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000004\nSeries: 1.2.826.0.1.3680043.10.474.3191761158175385619222890930533119774"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.252471141840439958032032563057", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000831\nSeries: 1.2.826.0.1.3680043.10.474.419639.252471141840439958032032563057"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.3515", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000002\nSeries: 1.2.826.0.1.3680043.10.474.440808.3515"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.166930891734251545206386203243", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001155\nSeries: 1.2.826.0.1.3680043.10.474.419639.166930891734251545206386203243"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.325938251460221922786421195457", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001012\nSeries: 1.2.826.0.1.3680043.10.474.419639.325938251460221922786421195457"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.8601468208500519203101100296010003339", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000038\nSeries: 1.2.826.0.1.3680043.10.474.8601468208500519203101100296010003339"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.300423266679936330916265249312", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001012\nSeries: 1.2.826.0.1.3680043.10.474.419639.300423266679936330916265249312"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.179112491236410204862693502526", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000906\nSeries: 1.2.826.0.1.3680043.10.474.419639.179112491236410204862693502526"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.3315191637069927546918849777550838093", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000244\nSeries: 1.2.826.0.1.3680043.10.474.3315191637069927546918849777550838093"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.281544670255145683323051531104", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-000421\nSeries: 1.2.826.0.1.3680043.10.474.419639.281544670255145683323051531104"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.4377416751236181719833515383014544684", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000046\nSeries: 1.2.826.0.1.3680043.10.474.4377416751236181719833515383014544684"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.6258229043225050870541683779426796429", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000037\nSeries: 1.2.826.0.1.3680043.10.474.6258229043225050870541683779426796429"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.2235480347607702379351277767790724341", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000039\nSeries: 1.2.826.0.1.3680043.10.474.2235480347607702379351277767790724341"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.420711809677491060385394909186", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001085\nSeries: 1.2.826.0.1.3680043.10.474.419639.420711809677491060385394909186"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.440808.2231", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-440808-000004\nSeries: 1.2.826.0.1.3680043.10.474.440808.2231"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.312847002543659223790204299762", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001446\nSeries: 1.2.826.0.1.3680043.10.474.419639.312847002543659223790204299762"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.1990608345352424299470383542240921551", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-SITE2-000259\nSeries: 1.2.826.0.1.3680043.10.474.1990608345352424299470383542240921551"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.10.474.419639.203143587760086040417736385984", "label": "CT", "shape": "dot", "title": "PatientID: MIDRC-RICORD-1A-419639-001336\nSeries: 1.2.826.0.1.3680043.10.474.419639.203143587760086040417736385984"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

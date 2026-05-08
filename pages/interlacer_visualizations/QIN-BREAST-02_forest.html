@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.117362907068422666887107081542", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0002\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.117362907068422666887107081542"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.981189383595226575552494932128", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0012\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.981189383595226575552494932128"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.225427325957091324076251442689", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0010\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.225427325957091324076251442689"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.202251083958422075345834977865", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0007\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.202251083958422075345834977865"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.245001029780855086892804566015", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.245001029780855086892804566015"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.374567617764706292060049974042", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0005\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.374567617764706292060049974042"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.199884755599876274152530164407", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0002\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.199884755599876274152530164407"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.299374756743057023804935652261", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.299374756743057023804935652261"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.727602667827585326889830343706", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.727602667827585326889830343706"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.573938998733076861543302675843", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0012\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.573938998733076861543302675843"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.319745308347186431512769886487", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0002\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.319745308347186431512769886487"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.204689983699354675542291626999", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.204689983699354675542291626999"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.841762928377550497987681532388", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.841762928377550497987681532388"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.240709249087241092797293262140", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.240709249087241092797293262140"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.431097837116888071212798520293", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0004\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.431097837116888071212798520293"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.794176382597220693459280362342", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.794176382597220693459280362342"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.157174688099753325261446388721", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0007\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.157174688099753325261446388721"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.207369023733353654310319630182", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0004\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.207369023733353654310319630182"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.263738358309111511986474093397", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.263738358309111511986474093397"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.260088782734774205821769799246", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0010\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.260088782734774205821769799246"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.224387898393119706705447277515", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.224387898393119706705447277515"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.263199252428514045900393009069", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0005\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.263199252428514045900393009069"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.211275816756231945306138980249", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0005\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.211275816756231945306138980249"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.128634553607159517241409690890", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.128634553607159517241409690890"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.117316308314967029455777432371", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.117316308314967029455777432371"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.120161330044129219749220315320", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0005\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.120161330044129219749220315320"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.159179306896125671664046398114", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.159179306896125671664046398114"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.294326629399208973277279549410", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0004\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.294326629399208973277279549410"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.101409864170166138688024236055", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0002\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.101409864170166138688024236055"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.140214260330560012598707588250", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.140214260330560012598707588250"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.119253454012157146836294377060", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0008\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.119253454012157146836294377060"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.263531560274573117074729194841", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.263531560274573117074729194841"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.261125907902752951838262522931", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.261125907902752951838262522931"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.205708179209836610237757148452", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0008\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.205708179209836610237757148452"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.256846391536302227516531905508", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.256846391536302227516531905508"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.291351755415603093406906656113", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.291351755415603093406906656113"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.256373521866226671479060245388", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.256373521866226671479060245388"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.960533801866430817375822248622", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.960533801866430817375822248622"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.156516101121155346895125503460", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0008\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.156516101121155346895125503460"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.189215123695093949898109661195", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0010\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.189215123695093949898109661195"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.268053111116069005953881731882", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0006\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.268053111116069005953881731882"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.302334071970184079400756159538", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0008\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.302334071970184079400756159538"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.230813196553424242119956918828", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.230813196553424242119956918828"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.169680006323344890317708928240", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.169680006323344890317708928240"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.198059890090830100669601200612", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.198059890090830100669601200612"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.301890393460091060670989097114", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.301890393460091060670989097114"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.122458485703958775653895822200", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0008\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.122458485703958775653895822200"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.126359911528914374623171144635", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.126359911528914374623171144635"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.228351514242293282579863470737", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0009\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.228351514242293282579863470737"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8162.5966.541391629046186288284381340384", "label": "MR", "shape": "dot", "title": "PatientID: QIN-BREAST-02-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.8162.5966.541391629046186288284381340384"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

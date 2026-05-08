@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.472487242479339829337663734200", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-794128\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.472487242479339829337663734200"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.172371878547561965858198375330", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-774840\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.172371878547561965858198375330"}, {"color": "#d62728", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.313269481291760669313021920466", "label": "SEG", "shape": "dot", "title": "PatientID: ACRIN-6698-774840\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.313269481291760669313021920466"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.105783000943044743296201662892", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-530095\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.105783000943044743296201662892"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.821857362338302791113136932872", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-963604\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.821857362338302791113136932872"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.297040696846489579952361436173", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-952074\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.297040696846489579952361436173"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.306009736772140095362862019249", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-721099\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.306009736772140095362862019249"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.138168956965174423194953809033", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-683896\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.138168956965174423194953809033"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.215171743123404870680465672230", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-728149\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.215171743123404870680465672230"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.326409874992918131072894049166", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-524170\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.326409874992918131072894049166"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.172840045499486940804099706712", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-401215\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.172840045499486940804099706712"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.110604822011354142748305797331", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-361701\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.110604822011354142748305797331"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.923876131811803201572882094274", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-609151\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.923876131811803201572882094274"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.555778319959551302017124425870", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-987728\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.555778319959551302017124425870"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.117008322775682356723190396361", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-580632\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.117008322775682356723190396361"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.162987593057421076324591941525", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-618717\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.162987593057421076324591941525"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.144953189894685232613907431148", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-530095\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.144953189894685232613907431148"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.777453498667257908610651515443", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-609151\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.777453498667257908610651515443"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.206439588314019260079594665585", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-800447\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.206439588314019260079594665585"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.255772864767539250801102527159", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-801641\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.255772864767539250801102527159"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.314259870242932602015667781398", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-635632\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.314259870242932602015667781398"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.308891260780890289494821402156", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-654064\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.308891260780890289494821402156"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.277800852090637464966640918793", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-799149\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.277800852090637464966640918793"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.338140419531052188972217239841", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-691753\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.338140419531052188972217239841"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.177571208050771376980243969058", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-417474\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.177571208050771376980243969058"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.286190572457331481871409001899", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-802308\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.286190572457331481871409001899"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.197139348863010573025026297983", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-118307\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.197139348863010573025026297983"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.178340078294090108017456890120", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-695521\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.178340078294090108017456890120"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.274849359726542192368500665991", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-698094\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.274849359726542192368500665991"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.228422694039657672571987349858", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-258299\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.228422694039657672571987349858"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.247858784965576824478175440921", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-629606\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.247858784965576824478175440921"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.323358525318947577121243932758", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-401215\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.323358525318947577121243932758"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.284485933305527142390520105631", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-856144\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.284485933305527142390520105631"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.236145064525468222339435488732", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-629547\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.236145064525468222339435488732"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.871642221890891179478387816712", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-765671\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.871642221890891179478387816712"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.250558487663607227470662559229", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-179369\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.250558487663607227470662559229"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.302143591193413991674265784585", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-266840\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.302143591193413991674265784585"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.127915384494284937018059935948", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-430441\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.127915384494284937018059935948"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.318204050124969907522848791202", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-635632\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.318204050124969907522848791202"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.324415168962298161636613955357", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-253531\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.324415168962298161636613955357"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.268988595199884934285645092163", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-383456\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.268988595199884934285645092163"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.245605511380837363258022676863", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-584437\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.245605511380837363258022676863"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.173681545980751449209964674805", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-458274\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.173681545980751449209964674805"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.265991872150254378872537019598", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-524170\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.265991872150254378872537019598"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.309643805218625006583930967233", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-376676\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.309643805218625006583930967233"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.346688266883720213714116425860", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-222135\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.346688266883720213714116425860"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.165833885551301456917796321365", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-266840\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.165833885551301456917796321365"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.135086446286881987633068219150", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-240957\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.135086446286881987633068219150"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.228472993034244218871167102916", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-435279\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.228472993034244218871167102916"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.972305643433591907617154966529", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-946927\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.972305643433591907617154966529"}, {"color": "#d62728", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.981683241952517753200938773764", "label": "SEG", "shape": "dot", "title": "PatientID: ACRIN-6698-946927\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.981683241952517753200938773764"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7695.4164.122056698141109203745382095504", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-6698-802308\nSeries: 1.3.6.1.4.1.14519.5.2.1.7695.4164.122056698141109203745382095504"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.7695.4164.313269481291760669313021920466", "to": "1.3.6.1.4.1.14519.5.2.1.7695.4164.172371878547561965858198375330"}, {"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.7695.4164.981683241952517753200938773764", "to": "1.3.6.1.4.1.14519.5.2.1.7695.4164.972305643433591907617154966529"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

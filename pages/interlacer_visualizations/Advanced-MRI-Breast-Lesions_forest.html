@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.154963410690565349208844264253697741074", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-389\nSeries: 1.3.6.1.4.1.14519.5.2.1.154963410690565349208844264253697741074"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.100319952998456626591913940094526286750", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-403\nSeries: 1.3.6.1.4.1.14519.5.2.1.100319952998456626591913940094526286750"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.25651658195315498950836730773787546075", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-379\nSeries: 1.3.6.1.4.1.14519.5.2.1.25651658195315498950836730773787546075"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.330444853255604921291764708854799440140", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-082\nSeries: 1.3.6.1.4.1.14519.5.2.1.330444853255604921291764708854799440140"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.23044409593313311027014857423647938357", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-429\nSeries: 1.3.6.1.4.1.14519.5.2.1.23044409593313311027014857423647938357"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.74991487933708212019784471550181168158", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-031\nSeries: 1.3.6.1.4.1.14519.5.2.1.74991487933708212019784471550181168158"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.20609598423125223300457010336035882296", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-233\nSeries: 1.3.6.1.4.1.14519.5.2.1.20609598423125223300457010336035882296"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.16618575832664374787659112593664687138", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-304\nSeries: 1.3.6.1.4.1.14519.5.2.1.16618575832664374787659112593664687138"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.298684386713698355741646589971404775764", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-230\nSeries: 1.3.6.1.4.1.14519.5.2.1.298684386713698355741646589971404775764"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.3418450978104620628572364362603290544", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-558\nSeries: 1.3.6.1.4.1.14519.5.2.1.3418450978104620628572364362603290544"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.306071066424677040249003264064276036982", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-476\nSeries: 1.3.6.1.4.1.14519.5.2.1.306071066424677040249003264064276036982"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.140157587957738909177715582580246523668", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-158\nSeries: 1.3.6.1.4.1.14519.5.2.1.140157587957738909177715582580246523668"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.182188950152727483906158850030836660415", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-400\nSeries: 1.3.6.1.4.1.14519.5.2.1.182188950152727483906158850030836660415"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.320844064215918885485864547215074814519", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-493\nSeries: 1.3.6.1.4.1.14519.5.2.1.320844064215918885485864547215074814519"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.82973031041197359424450332280002537708", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-385\nSeries: 1.3.6.1.4.1.14519.5.2.1.82973031041197359424450332280002537708"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.168070400458283043995278109000175427857", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-630\nSeries: 1.3.6.1.4.1.14519.5.2.1.168070400458283043995278109000175427857"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.192315507667931575635945369142891319771", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-016\nSeries: 1.3.6.1.4.1.14519.5.2.1.192315507667931575635945369142891319771"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.265901780120002781569223355956097441313", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-194\nSeries: 1.3.6.1.4.1.14519.5.2.1.265901780120002781569223355956097441313"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.71457943476228293709019884670107691148", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-619\nSeries: 1.3.6.1.4.1.14519.5.2.1.71457943476228293709019884670107691148"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.328680755013162549116289813322170470165", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-118\nSeries: 1.3.6.1.4.1.14519.5.2.1.328680755013162549116289813322170470165"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.52323980856025820977909340722167058184", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-570\nSeries: 1.3.6.1.4.1.14519.5.2.1.52323980856025820977909340722167058184"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.198499199194701310688275023001717564540", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-133\nSeries: 1.3.6.1.4.1.14519.5.2.1.198499199194701310688275023001717564540"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.284378245634240195792219681445865607668", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-008\nSeries: 1.3.6.1.4.1.14519.5.2.1.284378245634240195792219681445865607668"}, {"color": "#d62728", "id": "1.3.6.1.4.1.14519.5.2.1.265308802913006981042658055662075225364", "label": "SEG", "shape": "dot", "title": "PatientID: AMBL-008\nSeries: 1.3.6.1.4.1.14519.5.2.1.265308802913006981042658055662075225364"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.303527780250512956881261102139095504810", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-148\nSeries: 1.3.6.1.4.1.14519.5.2.1.303527780250512956881261102139095504810"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.262008248514288258330487384342781683129", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-122\nSeries: 1.3.6.1.4.1.14519.5.2.1.262008248514288258330487384342781683129"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.94673869653055760251843560420518159191", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-400\nSeries: 1.3.6.1.4.1.14519.5.2.1.94673869653055760251843560420518159191"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.100710987992794080497304748203813532869", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-598\nSeries: 1.3.6.1.4.1.14519.5.2.1.100710987992794080497304748203813532869"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.258470947840783638649288201316799225081", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-365\nSeries: 1.3.6.1.4.1.14519.5.2.1.258470947840783638649288201316799225081"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.121364152023256789835098653164136270247", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-132\nSeries: 1.3.6.1.4.1.14519.5.2.1.121364152023256789835098653164136270247"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.60600828987790867136117722601159941633", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-414\nSeries: 1.3.6.1.4.1.14519.5.2.1.60600828987790867136117722601159941633"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.10769371571298344778984707583972633396", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-167\nSeries: 1.3.6.1.4.1.14519.5.2.1.10769371571298344778984707583972633396"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.150663595872476012209584859681539519944", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-061\nSeries: 1.3.6.1.4.1.14519.5.2.1.150663595872476012209584859681539519944"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.12490753394906867347457134506351964324", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-354\nSeries: 1.3.6.1.4.1.14519.5.2.1.12490753394906867347457134506351964324"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.206260093980964080071306251275553805463", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-280\nSeries: 1.3.6.1.4.1.14519.5.2.1.206260093980964080071306251275553805463"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.170777868525771505525528990368266627035", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-103\nSeries: 1.3.6.1.4.1.14519.5.2.1.170777868525771505525528990368266627035"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.222900261612229081393039382523167788215", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-207\nSeries: 1.3.6.1.4.1.14519.5.2.1.222900261612229081393039382523167788215"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.50770508435178102287281278070014537409", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-138\nSeries: 1.3.6.1.4.1.14519.5.2.1.50770508435178102287281278070014537409"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.49260721870748905774076563278811909761", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-055\nSeries: 1.3.6.1.4.1.14519.5.2.1.49260721870748905774076563278811909761"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.298444581862844867765163779768008656050", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-456\nSeries: 1.3.6.1.4.1.14519.5.2.1.298444581862844867765163779768008656050"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.281333305966395843507780260852477641846", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-402\nSeries: 1.3.6.1.4.1.14519.5.2.1.281333305966395843507780260852477641846"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.91798219504415788591966595291943560004", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-392\nSeries: 1.3.6.1.4.1.14519.5.2.1.91798219504415788591966595291943560004"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.281010611870453805264371360476806128053", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-044\nSeries: 1.3.6.1.4.1.14519.5.2.1.281010611870453805264371360476806128053"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.50751821808603434141296741221204740242", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-537\nSeries: 1.3.6.1.4.1.14519.5.2.1.50751821808603434141296741221204740242"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.185947487361338383710959768115586016597", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-608\nSeries: 1.3.6.1.4.1.14519.5.2.1.185947487361338383710959768115586016597"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.66579582560713932716160492860673610978", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-333\nSeries: 1.3.6.1.4.1.14519.5.2.1.66579582560713932716160492860673610978"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.154445092399021564159812262879062112402", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-541\nSeries: 1.3.6.1.4.1.14519.5.2.1.154445092399021564159812262879062112402"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.277283382762844823984604133131696211621", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-218\nSeries: 1.3.6.1.4.1.14519.5.2.1.277283382762844823984604133131696211621"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.300740488516800285854126462749770575535", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-622\nSeries: 1.3.6.1.4.1.14519.5.2.1.300740488516800285854126462749770575535"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.148081311312655144060074376333728908993", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-596\nSeries: 1.3.6.1.4.1.14519.5.2.1.148081311312655144060074376333728908993"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.210322889052304896718516541858065174992", "label": "MR", "shape": "dot", "title": "PatientID: AMBL-109\nSeries: 1.3.6.1.4.1.14519.5.2.1.210322889052304896718516541858065174992"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.265308802913006981042658055662075225364", "to": "1.3.6.1.4.1.14519.5.2.1.284378245634240195792219681445865607668"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

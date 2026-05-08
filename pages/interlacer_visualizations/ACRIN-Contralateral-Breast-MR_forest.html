@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.238544179418370730660384354526", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-783\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.238544179418370730660384354526"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.326521791870329764674953258546", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-751\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.326521791870329764674953258546"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.332185737012082392418676159467", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-453\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.332185737012082392418676159467"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.724316369166624107621340448563", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-510\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.724316369166624107621340448563"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.100348787460486022025974490515", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-397\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.100348787460486022025974490515"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.154067088676978720707255679562", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-392\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.154067088676978720707255679562"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.303689199293298173741358839531", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-028\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.303689199293298173741358839531"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.179458978056907270323617849956", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-558\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.179458978056907270323617849956"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.247502497076338948650341676263", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-173\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.247502497076338948650341676263"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.101792945253582933753390310589", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-926\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.101792945253582933753390310589"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.183641726586395310767335191008", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-171\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.183641726586395310767335191008"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.221176538214398798651441992151", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-798\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.221176538214398798651441992151"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.145714070068506733009165361765", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-434\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.145714070068506733009165361765"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.202558583666123452285791681249", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-864\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.202558583666123452285791681249"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.926433306947094460038674762123", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-511\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.926433306947094460038674762123"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.832666874065423723391868199231", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-704\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.832666874065423723391868199231"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.320183487398521540613734529898", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-363\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.320183487398521540613734529898"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.137595430596664495276079230209", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-712\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.137595430596664495276079230209"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.106515281924316973769456387915", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-295\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.106515281924316973769456387915"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.128414788846295637475058826941", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-079\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.128414788846295637475058826941"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.314820774346441408929862053285", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-922\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.314820774346441408929862053285"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.295914376428975976481779497076", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-838\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.295914376428975976481779497076"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.310537401674786249405035443578", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-253\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.310537401674786249405035443578"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.286844155872848455789342649504", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-734\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.286844155872848455789342649504"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.864970708469523255998949343130", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-107\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.864970708469523255998949343130"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.800617806091901919470926754328", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-326\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.800617806091901919470926754328"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.267173618482944282207899938131", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-327\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.267173618482944282207899938131"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.171169631395548421615173125980", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-902\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.171169631395548421615173125980"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.296059865643533616828470418130", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-436\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.296059865643533616828470418130"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.251240167962288394208704070540", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-556\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.251240167962288394208704070540"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.218951422549922377627731271830", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-373\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.218951422549922377627731271830"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.139811038693094275831107656239", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-407\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.139811038693094275831107656239"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.254693153786218934728844470171", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-034\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.254693153786218934728844470171"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.217412397871716472280065781828", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-948\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.217412397871716472280065781828"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.233934638747450130058942226277", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-162\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.233934638747450130058942226277"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.453377883239567880333648966240", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-428\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.453377883239567880333648966240"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.105464206196617410468042039316", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-074\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.105464206196617410468042039316"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.432049501937453731178890031243", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-408\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.432049501937453731178890031243"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.327728832228360571017783905642", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-711\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.327728832228360571017783905642"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.188514224707249792965429665169", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-897\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.188514224707249792965429665169"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.293784049847843524744051303091", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-406\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.293784049847843524744051303091"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.134278025842529358015915912430", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-602\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.134278025842529358015915912430"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.603765880614159315351336057312", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-779\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.603765880614159315351336057312"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.187922561717834797435251125872", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-199\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.187922561717834797435251125872"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.103047951758148762788991797760", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-705\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.103047951758148762788991797760"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.274347518542227740600081696671", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-674\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.274347518542227740600081696671"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.201600445632664434671021014880", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-453\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.201600445632664434671021014880"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.238080392821413607997093617449", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-295\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.238080392821413607997093617449"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.898615396029860819599180521584", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-702\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.898615396029860819599180521584"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.7009.2406.329396217790506479993793482018", "label": "MR", "shape": "dot", "title": "PatientID: ACRIN-Contralateral-Breast-MR-127\nSeries: 1.3.6.1.4.1.14519.5.2.1.7009.2406.329396217790506479993793482018"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.196057817713354366467233015538806593680", "label": "CT", "shape": "dot", "title": "PatientID: PAN_26\nSeries: 1.3.6.1.4.1.14519.5.2.1.196057817713354366467233015538806593680"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.9251835541793136098978035558028927078", "label": "CT", "shape": "dot", "title": "PatientID: PAN_03\nSeries: 1.3.6.1.4.1.14519.5.2.1.9251835541793136098978035558028927078"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.182244589441588035242646341710494823387", "label": "CT", "shape": "dot", "title": "PatientID: PAN_03\nSeries: 1.3.6.1.4.1.14519.5.2.1.182244589441588035242646341710494823387"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.122286616713629895510379301094454829213", "label": "CT", "shape": "dot", "title": "PatientID: PAN_22\nSeries: 1.3.6.1.4.1.14519.5.2.1.122286616713629895510379301094454829213"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.312730627641486837848830215433187857952", "label": "CT", "shape": "dot", "title": "PatientID: PAN_21\nSeries: 1.3.6.1.4.1.14519.5.2.1.312730627641486837848830215433187857952"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.104613687090605011458555996047093072062", "label": "CT", "shape": "dot", "title": "PatientID: PAN_15\nSeries: 1.3.6.1.4.1.14519.5.2.1.104613687090605011458555996047093072062"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.120772198472844276362390534603737834627", "label": "CT", "shape": "dot", "title": "PatientID: PAN_14\nSeries: 1.3.6.1.4.1.14519.5.2.1.120772198472844276362390534603737834627"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.190559739231142150911329232258137953365", "label": "CT", "shape": "dot", "title": "PatientID: PAN_31\nSeries: 1.3.6.1.4.1.14519.5.2.1.190559739231142150911329232258137953365"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.61215620144017475315984268989613006910", "label": "CT", "shape": "dot", "title": "PatientID: PAN_06\nSeries: 1.3.6.1.4.1.14519.5.2.1.61215620144017475315984268989613006910"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.108260755132815043563860905406090553331", "label": "CT", "shape": "dot", "title": "PatientID: PAN_29\nSeries: 1.3.6.1.4.1.14519.5.2.1.108260755132815043563860905406090553331"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.155796984861393148698565906401236276964", "label": "CT", "shape": "dot", "title": "PatientID: PAN_05\nSeries: 1.3.6.1.4.1.14519.5.2.1.155796984861393148698565906401236276964"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.188821451649633255972852784348099026286", "label": "CT", "shape": "dot", "title": "PatientID: PAN_23\nSeries: 1.3.6.1.4.1.14519.5.2.1.188821451649633255972852784348099026286"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8440192747348614122503446766120886425", "label": "CT", "shape": "dot", "title": "PatientID: PAN_31\nSeries: 1.3.6.1.4.1.14519.5.2.1.8440192747348614122503446766120886425"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.207811285981201588023006747714938535490", "label": "CT", "shape": "dot", "title": "PatientID: PAN_07\nSeries: 1.3.6.1.4.1.14519.5.2.1.207811285981201588023006747714938535490"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.65751038474368330841950876063889242299", "label": "CT", "shape": "dot", "title": "PatientID: PAN_24\nSeries: 1.3.6.1.4.1.14519.5.2.1.65751038474368330841950876063889242299"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.297880364763552298221533864328695590455", "label": "CT", "shape": "dot", "title": "PatientID: PAN_12\nSeries: 1.3.6.1.4.1.14519.5.2.1.297880364763552298221533864328695590455"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8778865714429543025390549910853963828", "label": "CT", "shape": "dot", "title": "PatientID: PAN_27\nSeries: 1.3.6.1.4.1.14519.5.2.1.8778865714429543025390549910853963828"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.309571110671406529177000323832515356426", "label": "CT", "shape": "dot", "title": "PatientID: PAN_04\nSeries: 1.3.6.1.4.1.14519.5.2.1.309571110671406529177000323832515356426"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.183233270041982933330025879648206347526", "label": "CT", "shape": "dot", "title": "PatientID: PAN_28\nSeries: 1.3.6.1.4.1.14519.5.2.1.183233270041982933330025879648206347526"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.317297528535486564730155185239280323170", "label": "CT", "shape": "dot", "title": "PatientID: PAN_38\nSeries: 1.3.6.1.4.1.14519.5.2.1.317297528535486564730155185239280323170"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.28896125302542516815899389884640277244", "label": "CT", "shape": "dot", "title": "PatientID: PAN_37\nSeries: 1.3.6.1.4.1.14519.5.2.1.28896125302542516815899389884640277244"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.60805953339287082368280596985914994678", "label": "CT", "shape": "dot", "title": "PatientID: PAN_17\nSeries: 1.3.6.1.4.1.14519.5.2.1.60805953339287082368280596985914994678"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.25606515946678968027302392921075381023", "label": "CT", "shape": "dot", "title": "PatientID: PAN_33\nSeries: 1.3.6.1.4.1.14519.5.2.1.25606515946678968027302392921075381023"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.141427407548604035846105275679377506764", "label": "CT", "shape": "dot", "title": "PatientID: PAN_33\nSeries: 1.3.6.1.4.1.14519.5.2.1.141427407548604035846105275679377506764"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.40450042514183414359336327614762379506", "label": "CT", "shape": "dot", "title": "PatientID: PAN_37\nSeries: 1.3.6.1.4.1.14519.5.2.1.40450042514183414359336327614762379506"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.45745726221449503109732313921747695758", "label": "CT", "shape": "dot", "title": "PatientID: PAN_34\nSeries: 1.3.6.1.4.1.14519.5.2.1.45745726221449503109732313921747695758"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.145767281904717539696274710556113007992", "label": "CT", "shape": "dot", "title": "PatientID: PAN_10\nSeries: 1.3.6.1.4.1.14519.5.2.1.145767281904717539696274710556113007992"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.173919465111784026174235786987563357792", "label": "CT", "shape": "dot", "title": "PatientID: PAN_19\nSeries: 1.3.6.1.4.1.14519.5.2.1.173919465111784026174235786987563357792"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.68408937571293698935703434489743895639", "label": "CT", "shape": "dot", "title": "PatientID: PAN_30\nSeries: 1.3.6.1.4.1.14519.5.2.1.68408937571293698935703434489743895639"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.156705358088703269358182143401715633151", "label": "CT", "shape": "dot", "title": "PatientID: PAN_23\nSeries: 1.3.6.1.4.1.14519.5.2.1.156705358088703269358182143401715633151"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.108041457157459513608526350532855582759", "label": "CT", "shape": "dot", "title": "PatientID: PAN_10\nSeries: 1.3.6.1.4.1.14519.5.2.1.108041457157459513608526350532855582759"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.260094390611094563225691400262789353520", "label": "CT", "shape": "dot", "title": "PatientID: PAN_06\nSeries: 1.3.6.1.4.1.14519.5.2.1.260094390611094563225691400262789353520"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.301296259270759408564924818046750527379", "label": "CT", "shape": "dot", "title": "PatientID: PAN_16\nSeries: 1.3.6.1.4.1.14519.5.2.1.301296259270759408564924818046750527379"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.216288596244004469281924656380751432480", "label": "CT", "shape": "dot", "title": "PatientID: PAN_24\nSeries: 1.3.6.1.4.1.14519.5.2.1.216288596244004469281924656380751432480"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.299267142145453239428772483473327505735", "label": "CT", "shape": "dot", "title": "PatientID: PAN_26\nSeries: 1.3.6.1.4.1.14519.5.2.1.299267142145453239428772483473327505735"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.303095356093418930799335654747474528755", "label": "CT", "shape": "dot", "title": "PatientID: PAN_11\nSeries: 1.3.6.1.4.1.14519.5.2.1.303095356093418930799335654747474528755"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.168003535366793174643439987003032725972", "label": "CT", "shape": "dot", "title": "PatientID: PAN_08\nSeries: 1.3.6.1.4.1.14519.5.2.1.168003535366793174643439987003032725972"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.285068618848060333594977888752524928126", "label": "CT", "shape": "dot", "title": "PatientID: PAN_02\nSeries: 1.3.6.1.4.1.14519.5.2.1.285068618848060333594977888752524928126"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.91500532335785473219098063350836521053", "label": "CT", "shape": "dot", "title": "PatientID: PAN_13\nSeries: 1.3.6.1.4.1.14519.5.2.1.91500532335785473219098063350836521053"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.293314583243327313244992514652235351192", "label": "CT", "shape": "dot", "title": "PatientID: PAN_01\nSeries: 1.3.6.1.4.1.14519.5.2.1.293314583243327313244992514652235351192"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.48824858058562448685625585430007034682", "label": "CT", "shape": "dot", "title": "PatientID: PAN_36\nSeries: 1.3.6.1.4.1.14519.5.2.1.48824858058562448685625585430007034682"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.98806944896875131873924657854330253112", "label": "CT", "shape": "dot", "title": "PatientID: PAN_15\nSeries: 1.3.6.1.4.1.14519.5.2.1.98806944896875131873924657854330253112"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.272012002442522084129124617300926319734", "label": "CT", "shape": "dot", "title": "PatientID: PAN_32\nSeries: 1.3.6.1.4.1.14519.5.2.1.272012002442522084129124617300926319734"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.104159144045999062289588540199508128889", "label": "CT", "shape": "dot", "title": "PatientID: PAN_27\nSeries: 1.3.6.1.4.1.14519.5.2.1.104159144045999062289588540199508128889"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.76781813816095148130814248499981842333", "label": "CT", "shape": "dot", "title": "PatientID: PAN_20\nSeries: 1.3.6.1.4.1.14519.5.2.1.76781813816095148130814248499981842333"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.283266515606685162995724403080411233725", "label": "CT", "shape": "dot", "title": "PatientID: PAN_09\nSeries: 1.3.6.1.4.1.14519.5.2.1.283266515606685162995724403080411233725"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.93311187357673003748356517137713398976", "label": "CT", "shape": "dot", "title": "PatientID: PAN_22\nSeries: 1.3.6.1.4.1.14519.5.2.1.93311187357673003748356517137713398976"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.92166013733258784220010061195474351181", "label": "CT", "shape": "dot", "title": "PatientID: PAN_25\nSeries: 1.3.6.1.4.1.14519.5.2.1.92166013733258784220010061195474351181"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.281447967097062477512642557231301286344", "label": "CT", "shape": "dot", "title": "PatientID: PAN_13\nSeries: 1.3.6.1.4.1.14519.5.2.1.281447967097062477512642557231301286344"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.237127321134041099456397194653519856815", "label": "CT", "shape": "dot", "title": "PatientID: PAN_38\nSeries: 1.3.6.1.4.1.14519.5.2.1.237127321134041099456397194653519856815"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

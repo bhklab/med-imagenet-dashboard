@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.239877687957650551664241998665", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-056\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.239877687957650551664241998665"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.414951131313461000661249628269", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-006\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.414951131313461000661249628269"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.915272436289218804778532165447", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-001\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.915272436289218804778532165447"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.300585295157708479989440993256", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-041\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.300585295157708479989440993256"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.102444002531843672446387409693", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-028\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.102444002531843672446387409693"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.153295662545484210377697381885", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-020\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.153295662545484210377697381885"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.553167686475317385990013330722", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-033\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.553167686475317385990013330722"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.165511743542673078052760795559", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-036\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.165511743542673078052760795559"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.299817746389544246834784648331", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-040\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.299817746389544246834784648331"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.860675165206082212044133369138", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-017\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.860675165206082212044133369138"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.162795777507978938963242575571", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-011\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.162795777507978938963242575571"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.112397321672373109227711393469", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-024\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.112397321672373109227711393469"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.409972064673820039143099206442", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-032\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.409972064673820039143099206442"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.808814397276881503861736568406", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-036\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.808814397276881503861736568406"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.282284250353337637944905627166", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-018\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.282284250353337637944905627166"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.211444963260789875794430167379", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-034\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.211444963260789875794430167379"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.337766617408841160396849998661", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-018\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.337766617408841160396849998661"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.238606486878734289141635360872", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-045\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.238606486878734289141635360872"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.594781747382072655222313220978", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-055\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.594781747382072655222313220978"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.791915073472684453388119217779", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-005\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.791915073472684453388119217779"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.121667186084711492138248798094", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-007\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.121667186084711492138248798094"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.228181901942931641577247114051", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-003\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.228181901942931641577247114051"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.139012849269888565367927506121", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-057\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.139012849269888565367927506121"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.837839729480017764637756976870", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-032\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.837839729480017764637756976870"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.252002024146000915969290261008", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-038\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.252002024146000915969290261008"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.121097534326099401719758594289", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-024\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.121097534326099401719758594289"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.582023128912946318264162057947", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-029\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.582023128912946318264162057947"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.220080468730378583585539060508", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-020\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.220080468730378583585539060508"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.269731676491336240582568543969", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-025\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.269731676491336240582568543969"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.172558425957783398912513735638", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-038\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.172558425957783398912513735638"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.425368916084361859134704441816", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-056\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.425368916084361859134704441816"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.226085956662777866334096697641", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-050\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.226085956662777866334096697641"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.840789178476543084824557596240", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-012\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.840789178476543084824557596240"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.277269831378488529372118566287", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-004\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.277269831378488529372118566287"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.762116918869969644926656872744", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-019\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.762116918869969644926656872744"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.284277281617435051534766477909", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-035\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.284277281617435051534766477909"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.125759593428541626317139506152", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-052\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.125759593428541626317139506152"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.128123375286829078207087793178", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-021\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.128123375286829078207087793178"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.172655946193211583130023679095", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-003\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.172655946193211583130023679095"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.327437153974553418129157750848", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-015\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.327437153974553418129157750848"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.231369143420934182182038813175", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-004\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.231369143420934182182038813175"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.104071550425794724120946970222", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-039\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.104071550425794724120946970222"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.271988687130218189244535671245", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-008\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.271988687130218189244535671245"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.150542968706930261866940519950", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-009\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.150542968706930261866940519950"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.418963555808265025446995780909", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-046\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.418963555808265025446995780909"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.319800665192267261211327131597", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-014\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.319800665192267261211327131597"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.229170307366591491422052692849", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-053\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.229170307366591491422052692849"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.927197158210173992371823732647", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-013\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.927197158210173992371823732647"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.133827632586663715491971827890", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-033\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.133827632586663715491971827890"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.7085.2036.237896381343774093475098368301", "label": "CT", "shape": "dot", "title": "PatientID: Pelvic-Ref-005\nSeries: 1.3.6.1.4.1.14519.5.2.1.7085.2036.237896381343774093475098368301"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

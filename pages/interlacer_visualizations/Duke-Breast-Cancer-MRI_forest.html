@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.65317863240083683297293071903421662680", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_466\nSeries: 1.3.6.1.4.1.14519.5.2.1.65317863240083683297293071903421662680"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.53734283934694286389502158781390333083", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_825\nSeries: 1.3.6.1.4.1.14519.5.2.1.53734283934694286389502158781390333083"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.14002893779901240944287523933701095691", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_241\nSeries: 1.3.6.1.4.1.14519.5.2.1.14002893779901240944287523933701095691"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.293178731202416858459985126901718685615", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_359\nSeries: 1.3.6.1.4.1.14519.5.2.1.293178731202416858459985126901718685615"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.56683531592654299041330333720880790664", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_359\nSeries: 1.3.6.1.4.1.14519.5.2.1.56683531592654299041330333720880790664"}, {"color": "#d62728", "id": "1.3.6.1.4.1.14519.5.2.1.52627046588192600725923426233840237836", "label": "SEG", "shape": "dot", "title": "PatientID: Breast_MRI_359\nSeries: 1.3.6.1.4.1.14519.5.2.1.52627046588192600725923426233840237836"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.165704326495623160896911199695915840266", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_128\nSeries: 1.3.6.1.4.1.14519.5.2.1.165704326495623160896911199695915840266"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.94849105127706574181963377085242942746", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_633\nSeries: 1.3.6.1.4.1.14519.5.2.1.94849105127706574181963377085242942746"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.49751287319650368001611839532793439359", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_652\nSeries: 1.3.6.1.4.1.14519.5.2.1.49751287319650368001611839532793439359"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.135753359170161778394704093932256151501", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_467\nSeries: 1.3.6.1.4.1.14519.5.2.1.135753359170161778394704093932256151501"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.57084972130792181208545002778424742049", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_470\nSeries: 1.3.6.1.4.1.14519.5.2.1.57084972130792181208545002778424742049"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.136196589349211924872747030772243657618", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_633\nSeries: 1.3.6.1.4.1.14519.5.2.1.136196589349211924872747030772243657618"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.319448482883390255457021145427284530678", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_504\nSeries: 1.3.6.1.4.1.14519.5.2.1.319448482883390255457021145427284530678"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.156922085234242727437242459594546513977", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_475\nSeries: 1.3.6.1.4.1.14519.5.2.1.156922085234242727437242459594546513977"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.84092162315474633396385789751951075064", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_624\nSeries: 1.3.6.1.4.1.14519.5.2.1.84092162315474633396385789751951075064"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.243106043900857574203058334473180039567", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_616\nSeries: 1.3.6.1.4.1.14519.5.2.1.243106043900857574203058334473180039567"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.230052068062710019492362960538198415943", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_610\nSeries: 1.3.6.1.4.1.14519.5.2.1.230052068062710019492362960538198415943"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.225616412956790798737772403772126171080", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_054\nSeries: 1.3.6.1.4.1.14519.5.2.1.225616412956790798737772403772126171080"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.290572584529654951564240068866849007439", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_180\nSeries: 1.3.6.1.4.1.14519.5.2.1.290572584529654951564240068866849007439"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.260237043574428433871031723705075280906", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_889\nSeries: 1.3.6.1.4.1.14519.5.2.1.260237043574428433871031723705075280906"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.277849809269708861822774109910004631705", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_369\nSeries: 1.3.6.1.4.1.14519.5.2.1.277849809269708861822774109910004631705"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.331666020328727836473710308709169030261", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_309\nSeries: 1.3.6.1.4.1.14519.5.2.1.331666020328727836473710308709169030261"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.87214974610785228178110055727712646016", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_335\nSeries: 1.3.6.1.4.1.14519.5.2.1.87214974610785228178110055727712646016"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.149362809188390087951909013170444838280", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_658\nSeries: 1.3.6.1.4.1.14519.5.2.1.149362809188390087951909013170444838280"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.241216904347704054948385876578613479603", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_854\nSeries: 1.3.6.1.4.1.14519.5.2.1.241216904347704054948385876578613479603"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.124136259765684103405876510641092291791", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_409\nSeries: 1.3.6.1.4.1.14519.5.2.1.124136259765684103405876510641092291791"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.31591662241482391866378979689118939873", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_899\nSeries: 1.3.6.1.4.1.14519.5.2.1.31591662241482391866378979689118939873"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.57508940008207086731828792002364625713", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_228\nSeries: 1.3.6.1.4.1.14519.5.2.1.57508940008207086731828792002364625713"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.289121015616337544742547203501405513315", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_733\nSeries: 1.3.6.1.4.1.14519.5.2.1.289121015616337544742547203501405513315"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.13728225423455449201184799711601213835", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_671\nSeries: 1.3.6.1.4.1.14519.5.2.1.13728225423455449201184799711601213835"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.323738074980495827779212555411899239701", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_231\nSeries: 1.3.6.1.4.1.14519.5.2.1.323738074980495827779212555411899239701"}, {"color": "#d62728", "id": "1.3.6.1.4.1.14519.5.2.1.176620983517530010119987775056051024798", "label": "SEG", "shape": "dot", "title": "PatientID: Breast_MRI_231\nSeries: 1.3.6.1.4.1.14519.5.2.1.176620983517530010119987775056051024798"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.188673181336185670986223496147307935871", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_540\nSeries: 1.3.6.1.4.1.14519.5.2.1.188673181336185670986223496147307935871"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.72310315397159044721826526943890799717", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_856\nSeries: 1.3.6.1.4.1.14519.5.2.1.72310315397159044721826526943890799717"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.58089325318079624307540201549786612919", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_123\nSeries: 1.3.6.1.4.1.14519.5.2.1.58089325318079624307540201549786612919"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.118256840073429991424932694172606403347", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_342\nSeries: 1.3.6.1.4.1.14519.5.2.1.118256840073429991424932694172606403347"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.115356122240809169198645616979234291746", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_610\nSeries: 1.3.6.1.4.1.14519.5.2.1.115356122240809169198645616979234291746"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.296454867410029265064993155907925246200", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_719\nSeries: 1.3.6.1.4.1.14519.5.2.1.296454867410029265064993155907925246200"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.106624762465116435855948981195239434975", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_045\nSeries: 1.3.6.1.4.1.14519.5.2.1.106624762465116435855948981195239434975"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.275618485444361468903641086063344688811", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_837\nSeries: 1.3.6.1.4.1.14519.5.2.1.275618485444361468903641086063344688811"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.36268857509042803279975915803827226345", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_578\nSeries: 1.3.6.1.4.1.14519.5.2.1.36268857509042803279975915803827226345"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.12719077674039267659064754117050053168", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_459\nSeries: 1.3.6.1.4.1.14519.5.2.1.12719077674039267659064754117050053168"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.209922478393968761127595690334064058380", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_906\nSeries: 1.3.6.1.4.1.14519.5.2.1.209922478393968761127595690334064058380"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.98663963958447591811547247574054000674", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_105\nSeries: 1.3.6.1.4.1.14519.5.2.1.98663963958447591811547247574054000674"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.75938463868024577655986715965598755290", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_240\nSeries: 1.3.6.1.4.1.14519.5.2.1.75938463868024577655986715965598755290"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.37909450400456131384433583206795286120", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_899\nSeries: 1.3.6.1.4.1.14519.5.2.1.37909450400456131384433583206795286120"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.182407363011392989581956148507603617530", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_778\nSeries: 1.3.6.1.4.1.14519.5.2.1.182407363011392989581956148507603617530"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.151977651438282965676828305190782578237", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_575\nSeries: 1.3.6.1.4.1.14519.5.2.1.151977651438282965676828305190782578237"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.30422836382945420699403683165949607265", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_142\nSeries: 1.3.6.1.4.1.14519.5.2.1.30422836382945420699403683165949607265"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.305315953922395634470919458853778934099", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_615\nSeries: 1.3.6.1.4.1.14519.5.2.1.305315953922395634470919458853778934099"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.1006876177683036596535490776748960742", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_464\nSeries: 1.3.6.1.4.1.14519.5.2.1.1006876177683036596535490776748960742"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.263694488846529347283992515457187641213", "label": "MR", "shape": "dot", "title": "PatientID: Breast_MRI_750\nSeries: 1.3.6.1.4.1.14519.5.2.1.263694488846529347283992515457187641213"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.52627046588192600725923426233840237836", "to": "1.3.6.1.4.1.14519.5.2.1.56683531592654299041330333720880790664"}, {"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.176620983517530010119987775056051024798", "to": "1.3.6.1.4.1.14519.5.2.1.323738074980495827779212555411899239701"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

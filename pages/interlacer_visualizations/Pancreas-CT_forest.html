@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.54202185566117804557999614606143398", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0052\nSeries: 1.2.826.0.1.3680043.2.1125.1.54202185566117804557999614606143398"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.83981751344358197753384984757609816", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0074\nSeries: 1.2.826.0.1.3680043.2.1125.1.83981751344358197753384984757609816"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.54321183778202831364710064876134565", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0033\nSeries: 1.2.826.0.1.3680043.2.1125.1.54321183778202831364710064876134565"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.10349856497345767271749258522763940", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0076\nSeries: 1.2.826.0.1.3680043.2.1125.1.10349856497345767271749258522763940"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.60235028047286366571052729575929673", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0022\nSeries: 1.2.826.0.1.3680043.2.1125.1.60235028047286366571052729575929673"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.70976897940209581446310001885329938", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0050\nSeries: 1.2.826.0.1.3680043.2.1125.1.70976897940209581446310001885329938"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.69792333269369605752973516531997074", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0034\nSeries: 1.2.826.0.1.3680043.2.1125.1.69792333269369605752973516531997074"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.41807808649608660190741768722560927", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0053\nSeries: 1.2.826.0.1.3680043.2.1125.1.41807808649608660190741768722560927"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.56888261301264068493188659404731622", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0056\nSeries: 1.2.826.0.1.3680043.2.1125.1.56888261301264068493188659404731622"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.47890912461048768555990637091662622", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0040\nSeries: 1.2.826.0.1.3680043.2.1125.1.47890912461048768555990637091662622"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.61311820398842434308441005386464199", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0023\nSeries: 1.2.826.0.1.3680043.2.1125.1.61311820398842434308441005386464199"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.53761950122363236364246793714171731", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0055\nSeries: 1.2.826.0.1.3680043.2.1125.1.53761950122363236364246793714171731"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.20717257972694535177379269529037728", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0081\nSeries: 1.2.826.0.1.3680043.2.1125.1.20717257972694535177379269529037728"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.17933634158214814504206233487222230", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0015\nSeries: 1.2.826.0.1.3680043.2.1125.1.17933634158214814504206233487222230"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.63368631195936177684197877163153391", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0059\nSeries: 1.2.826.0.1.3680043.2.1125.1.63368631195936177684197877163153391"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.50446704163540483207682542927101391", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0019\nSeries: 1.2.826.0.1.3680043.2.1125.1.50446704163540483207682542927101391"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.4516691524934112359097166214332005", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0065\nSeries: 1.2.826.0.1.3680043.2.1125.1.4516691524934112359097166214332005"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.54196931447541282010320970741324542", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0004\nSeries: 1.2.826.0.1.3680043.2.1125.1.54196931447541282010320970741324542"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.65856563973587572360731287795210588", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0043\nSeries: 1.2.826.0.1.3680043.2.1125.1.65856563973587572360731287795210588"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.2278349436231312032805483191278757", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0024\nSeries: 1.2.826.0.1.3680043.2.1125.1.2278349436231312032805483191278757"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.40631408996058588469985312769188870", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0049\nSeries: 1.2.826.0.1.3680043.2.1125.1.40631408996058588469985312769188870"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.38961098789292192421591953675838102", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0046\nSeries: 1.2.826.0.1.3680043.2.1125.1.38961098789292192421591953675838102"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.1543700067293409822950367187567394", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0006\nSeries: 1.2.826.0.1.3680043.2.1125.1.1543700067293409822950367187567394"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.22793969300205070895679804983639769", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0077\nSeries: 1.2.826.0.1.3680043.2.1125.1.22793969300205070895679804983639769"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.58872501779250807397724191008830563", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0069\nSeries: 1.2.826.0.1.3680043.2.1125.1.58872501779250807397724191008830563"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.98017442392702905704057901682475731", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0060\nSeries: 1.2.826.0.1.3680043.2.1125.1.98017442392702905704057901682475731"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.86733819107365022732321066218234445", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0038\nSeries: 1.2.826.0.1.3680043.2.1125.1.86733819107365022732321066218234445"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.66448407997172445629607402014656608", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0031\nSeries: 1.2.826.0.1.3680043.2.1125.1.66448407997172445629607402014656608"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.8952048442534880287218353731280664", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0054\nSeries: 1.2.826.0.1.3680043.2.1125.1.8952048442534880287218353731280664"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.27475633079891312014448792473058952", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0028\nSeries: 1.2.826.0.1.3680043.2.1125.1.27475633079891312014448792473058952"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.64431440660529413465820250742459468", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0003\nSeries: 1.2.826.0.1.3680043.2.1125.1.64431440660529413465820250742459468"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.36400425469807768087843451012303374", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0014\nSeries: 1.2.826.0.1.3680043.2.1125.1.36400425469807768087843451012303374"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.70400289892580346508098900601231505", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0020\nSeries: 1.2.826.0.1.3680043.2.1125.1.70400289892580346508098900601231505"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.16201530826403193098603729357912354", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0073\nSeries: 1.2.826.0.1.3680043.2.1125.1.16201530826403193098603729357912354"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.66376154825293205999744306285863502", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0002\nSeries: 1.2.826.0.1.3680043.2.1125.1.66376154825293205999744306285863502"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.81647781079891392443480265981836809", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0016\nSeries: 1.2.826.0.1.3680043.2.1125.1.81647781079891392443480265981836809"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.59610355456803806273254911989374308", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0029\nSeries: 1.2.826.0.1.3680043.2.1125.1.59610355456803806273254911989374308"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.58805474881930005160550603391831748", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0009\nSeries: 1.2.826.0.1.3680043.2.1125.1.58805474881930005160550603391831748"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.65339792067267961434908086407224615", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0042\nSeries: 1.2.826.0.1.3680043.2.1125.1.65339792067267961434908086407224615"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.29331889867901969678543688876494057", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0026\nSeries: 1.2.826.0.1.3680043.2.1125.1.29331889867901969678543688876494057"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.12520952175517515323332680058523170", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0067\nSeries: 1.2.826.0.1.3680043.2.1125.1.12520952175517515323332680058523170"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.65165294024341665171430580832823236", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0072\nSeries: 1.2.826.0.1.3680043.2.1125.1.65165294024341665171430580832823236"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.65979542890699457330209554090650363", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0008\nSeries: 1.2.826.0.1.3680043.2.1125.1.65979542890699457330209554090650363"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.82926597396361958841680272346049980", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0011\nSeries: 1.2.826.0.1.3680043.2.1125.1.82926597396361958841680272346049980"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.38062516732717623114007934699624124", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0066\nSeries: 1.2.826.0.1.3680043.2.1125.1.38062516732717623114007934699624124"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.64447180568847504533761442003065987", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0075\nSeries: 1.2.826.0.1.3680043.2.1125.1.64447180568847504533761442003065987"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.50491639863719842662282662616284506", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0062\nSeries: 1.2.826.0.1.3680043.2.1125.1.50491639863719842662282662616284506"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.90240432742873992607987189665924505", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0035\nSeries: 1.2.826.0.1.3680043.2.1125.1.90240432742873992607987189665924505"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.62964775786459292921303992968639748", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0082\nSeries: 1.2.826.0.1.3680043.2.1125.1.62964775786459292921303992968639748"}, {"color": "#1f77b4", "id": "1.2.826.0.1.3680043.2.1125.1.11965559194813068355935894731515844", "label": "CT", "shape": "dot", "title": "PatientID: PANCREAS_0021\nSeries: 1.2.826.0.1.3680043.2.1125.1.11965559194813068355935894731515844"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

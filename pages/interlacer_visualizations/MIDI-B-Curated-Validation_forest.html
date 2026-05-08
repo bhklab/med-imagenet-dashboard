@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.736486179808624564291731398768", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_049\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.736486179808624564291731398768"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.170396840069663740274338396809", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_040\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.170396840069663740274338396809"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.158901862228030522275834264920", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_174\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.158901862228030522275834264920"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.136632166581265848067320155666", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_054\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.136632166581265848067320155666"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.332778956564209288964718861584", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_213\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.332778956564209288964718861584"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.237444016846296190010027524194", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_076\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.237444016846296190010027524194"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.108849020079853255557539104936", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_076\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.108849020079853255557539104936"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.757545603989075531937825461152", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_145\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.757545603989075531937825461152"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.249053255796407680775283080114", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_165\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.249053255796407680775283080114"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.534406394244766412977014053324", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_165\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.534406394244766412977014053324"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.263620116902697699691168931828", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_047\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.263620116902697699691168931828"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.148624207124821853227964061584", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_011\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.148624207124821853227964061584"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.173599831657369037611682219629", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_060\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.173599831657369037611682219629"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.122687923811521382100755499337", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_063\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.122687923811521382100755499337"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.314768541307308522226650676327", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_114\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.314768541307308522226650676327"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.237450418455882517099839517942", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_084\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.237450418455882517099839517942"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.292732164990880091331614028759", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_105\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.292732164990880091331614028759"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.928732524494073041337646348455", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_125\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.928732524494073041337646348455"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.459916836377669335564499004278", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_203\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.459916836377669335564499004278"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.761351055949015416137458109916", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_108\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.761351055949015416137458109916"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.234730210831381354310414286537", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_021\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.234730210831381354310414286537"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.153669249376210733761722648565", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_005\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.153669249376210733761722648565"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.189492812327674765632442453437", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_191\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.189492812327674765632442453437"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.185978640126416795389891885698", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_019\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.185978640126416795389891885698"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.166336902833515740348614538761", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_195\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.166336902833515740348614538761"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.157256127402291413496884749003", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_195\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.157256127402291413496884749003"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.298716145888121734513963957416", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_113\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.298716145888121734513963957416"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.542239897529350848977611707921", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_106\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.542239897529350848977611707921"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.253119087589717140370770261758", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_047\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.253119087589717140370770261758"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.139479495683603136908867638760", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_047\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.139479495683603136908867638760"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.275892520625887689833382405503", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_074\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.275892520625887689833382405503"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.450077053542192948641429325419", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_077\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.450077053542192948641429325419"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.203360187315878415715551604588", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_208\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.203360187315878415715551604588"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.754156696661726763952630403540", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_014\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.754156696661726763952630403540"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.329455042667587088848840625427", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_147\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.329455042667587088848840625427"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.193534921590428020543654635852", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_170\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.193534921590428020543654635852"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.297781322043760544413264192055", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_154\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.297781322043760544413264192055"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.296893508067931207648957793241", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_148\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.296893508067931207648957793241"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.332792691957043136598561861009", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_185\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.332792691957043136598561861009"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.120018235450585994435419784429", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_167\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.120018235450585994435419784429"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.182749209173479385979868050404", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_023\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.182749209173479385979868050404"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.228304822267214219053436262403", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_110\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.228304822267214219053436262403"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.621620565278188982726070038333", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_043\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.621620565278188982726070038333"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.123318724513134758234821237594", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_128\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.123318724513134758234821237594"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.137795375004785269333060647874", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_004\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.137795375004785269333060647874"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.305929868093892014377790522725", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_037\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.305929868093892014377790522725"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.123780179476193660948700368205", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_040\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.123780179476193660948700368205"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.873764452443290787131738356122", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_158\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.873764452443290787131738356122"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.255315736570632073610817479052", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_188\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.255315736570632073610817479052"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.127791374935025931668205363943", "label": "MR", "shape": "dot", "title": "PatientID: MIDI_1_1_160\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.127791374935025931668205363943"}, {"color": "#1f77b4", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.262461861582733961719828100721", "label": "CT", "shape": "dot", "title": "PatientID: MIDI_1_1_139\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.262461861582733961719828100721"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.275951829518447465988580181753", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_167\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.275951829518447465988580181753"}, {"color": "#2ca02c", "id": "1.3.6.1.4.1.14519.5.2.1.8700.9920.699298878807845724232628230036", "label": "PT", "shape": "dot", "title": "PatientID: MIDI_1_1_184\nSeries: 1.3.6.1.4.1.14519.5.2.1.8700.9920.699298878807845724232628230036"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.8700.9920.108849020079853255557539104936", "to": "1.3.6.1.4.1.14519.5.2.1.8700.9920.237444016846296190010027524194"}, {"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.8700.9920.534406394244766412977014053324", "to": "1.3.6.1.4.1.14519.5.2.1.8700.9920.249053255796407680775283080114"}, {"arrows": "to", "from": "1.3.6.1.4.1.14519.5.2.1.8700.9920.139479495683603136908867638760", "to": "1.3.6.1.4.1.14519.5.2.1.8700.9920.253119087589717140370770261758"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

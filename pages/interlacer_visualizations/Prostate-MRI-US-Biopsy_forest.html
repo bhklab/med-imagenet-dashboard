@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.327872005390104122398728443776266378882", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0045\nSeries: 1.3.6.1.4.1.14519.5.2.1.327872005390104122398728443776266378882"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.270522034934508380462798867480060380499", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0077\nSeries: 1.3.6.1.4.1.14519.5.2.1.270522034934508380462798867480060380499"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.276740885598153148317871710309102444731", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0550\nSeries: 1.3.6.1.4.1.14519.5.2.1.276740885598153148317871710309102444731"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.84767917368914464425951906481461405460", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0731\nSeries: 1.3.6.1.4.1.14519.5.2.1.84767917368914464425951906481461405460"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.44828070567325388474093582127940465817", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1022\nSeries: 1.3.6.1.4.1.14519.5.2.1.44828070567325388474093582127940465817"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.181386216111527626099330649265319244629", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0306\nSeries: 1.3.6.1.4.1.14519.5.2.1.181386216111527626099330649265319244629"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.283334224785412259272484853305589846966", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1080\nSeries: 1.3.6.1.4.1.14519.5.2.1.283334224785412259272484853305589846966"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.236899496427992944850337142310952900208", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0324\nSeries: 1.3.6.1.4.1.14519.5.2.1.236899496427992944850337142310952900208"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.271043877883440017768305760075330041742", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1013\nSeries: 1.3.6.1.4.1.14519.5.2.1.271043877883440017768305760075330041742"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.57264334470522215431171343402288345620", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0044\nSeries: 1.3.6.1.4.1.14519.5.2.1.57264334470522215431171343402288345620"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.200240187361328547053189139845556466465", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0347\nSeries: 1.3.6.1.4.1.14519.5.2.1.200240187361328547053189139845556466465"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.35254049530378108416418253581632580456", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0610\nSeries: 1.3.6.1.4.1.14519.5.2.1.35254049530378108416418253581632580456"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.81883053986151228623072449038689882455", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0581\nSeries: 1.3.6.1.4.1.14519.5.2.1.81883053986151228623072449038689882455"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.18003898152147327412067209568641502124", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0198\nSeries: 1.3.6.1.4.1.14519.5.2.1.18003898152147327412067209568641502124"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.91906069903462192983393898712789800508", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0911\nSeries: 1.3.6.1.4.1.14519.5.2.1.91906069903462192983393898712789800508"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.130924826996243974736731217316617852961", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0427\nSeries: 1.3.6.1.4.1.14519.5.2.1.130924826996243974736731217316617852961"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.127553405517514424289480144195329888801", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0298\nSeries: 1.3.6.1.4.1.14519.5.2.1.127553405517514424289480144195329888801"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.188191795214284345519984332908055792289", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0552\nSeries: 1.3.6.1.4.1.14519.5.2.1.188191795214284345519984332908055792289"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.269194789820085149410287430468120615522", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0513\nSeries: 1.3.6.1.4.1.14519.5.2.1.269194789820085149410287430468120615522"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.255535518765468186242559449317470954277", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0986\nSeries: 1.3.6.1.4.1.14519.5.2.1.255535518765468186242559449317470954277"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.331670129604331725579459781051776649155", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0878\nSeries: 1.3.6.1.4.1.14519.5.2.1.331670129604331725579459781051776649155"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.135273366037832333234802713130133326576", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0390\nSeries: 1.3.6.1.4.1.14519.5.2.1.135273366037832333234802713130133326576"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.296437645519497148783266315012973744318", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0485\nSeries: 1.3.6.1.4.1.14519.5.2.1.296437645519497148783266315012973744318"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.322833967618287216080857877941954979209", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0788\nSeries: 1.3.6.1.4.1.14519.5.2.1.322833967618287216080857877941954979209"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.128376015188648403823446726950651318546", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1026\nSeries: 1.3.6.1.4.1.14519.5.2.1.128376015188648403823446726950651318546"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.321460209960351063677619793148051579341", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0849\nSeries: 1.3.6.1.4.1.14519.5.2.1.321460209960351063677619793148051579341"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.244839557756548723551169861899866388138", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0475\nSeries: 1.3.6.1.4.1.14519.5.2.1.244839557756548723551169861899866388138"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.332104729581527566120146797737671413926", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0849\nSeries: 1.3.6.1.4.1.14519.5.2.1.332104729581527566120146797737671413926"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.2156025457625289613209173582592560308", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0480\nSeries: 1.3.6.1.4.1.14519.5.2.1.2156025457625289613209173582592560308"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.227934202804375990765073100943794762565", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0414\nSeries: 1.3.6.1.4.1.14519.5.2.1.227934202804375990765073100943794762565"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.235658173713636050410523700194187234050", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1009\nSeries: 1.3.6.1.4.1.14519.5.2.1.235658173713636050410523700194187234050"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.132401893895199943534167795603249445074", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1020\nSeries: 1.3.6.1.4.1.14519.5.2.1.132401893895199943534167795603249445074"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.27237281760211765748523816713747603997", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1135\nSeries: 1.3.6.1.4.1.14519.5.2.1.27237281760211765748523816713747603997"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.224172923464910828489450130692213470409", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0956\nSeries: 1.3.6.1.4.1.14519.5.2.1.224172923464910828489450130692213470409"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.79799246105551414551856367535742030147", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0117\nSeries: 1.3.6.1.4.1.14519.5.2.1.79799246105551414551856367535742030147"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.54518743678408613928032910997409086590", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1023\nSeries: 1.3.6.1.4.1.14519.5.2.1.54518743678408613928032910997409086590"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.29345806184972974754821891460223252469", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0195\nSeries: 1.3.6.1.4.1.14519.5.2.1.29345806184972974754821891460223252469"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.328832479321993488364948539717292418541", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0568\nSeries: 1.3.6.1.4.1.14519.5.2.1.328832479321993488364948539717292418541"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.66423545374739275479407021550065911831", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0563\nSeries: 1.3.6.1.4.1.14519.5.2.1.66423545374739275479407021550065911831"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.211103272077414982428172439784643245925", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0377\nSeries: 1.3.6.1.4.1.14519.5.2.1.211103272077414982428172439784643245925"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.335754731902512173659760749866187867176", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0162\nSeries: 1.3.6.1.4.1.14519.5.2.1.335754731902512173659760749866187867176"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.34291255730412297453863588963797497781", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0685\nSeries: 1.3.6.1.4.1.14519.5.2.1.34291255730412297453863588963797497781"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.194574587104400091472945241723054151386", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0983\nSeries: 1.3.6.1.4.1.14519.5.2.1.194574587104400091472945241723054151386"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.119316743041775403517326091115461233485", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-1102\nSeries: 1.3.6.1.4.1.14519.5.2.1.119316743041775403517326091115461233485"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.29225662297376327522793089943329931979", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0563\nSeries: 1.3.6.1.4.1.14519.5.2.1.29225662297376327522793089943329931979"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.231468768858388650094800829016037736220", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0084\nSeries: 1.3.6.1.4.1.14519.5.2.1.231468768858388650094800829016037736220"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.48501288851430544619087786770595125443", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0996\nSeries: 1.3.6.1.4.1.14519.5.2.1.48501288851430544619087786770595125443"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.167610985487058237016170659905746108653", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0676\nSeries: 1.3.6.1.4.1.14519.5.2.1.167610985487058237016170659905746108653"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.115442909272657972858266367055153267464", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0677\nSeries: 1.3.6.1.4.1.14519.5.2.1.115442909272657972858266367055153267464"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.255419296413999575814684992253531245682", "label": "MR", "shape": "dot", "title": "PatientID: Prostate-MRI-US-Biopsy-0173\nSeries: 1.3.6.1.4.1.14519.5.2.1.255419296413999575814684992253531245682"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

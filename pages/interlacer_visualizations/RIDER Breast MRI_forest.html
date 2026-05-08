@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.291789850540375390961216580374023984250", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.291789850540375390961216580374023984250"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.35429162342801350587720022569185564781", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.35429162342801350587720022569185564781"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.136774883885256745510584753296709224805", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.136774883885256745510584753296709224805"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.308785639494920571690892609835070237119", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.308785639494920571690892609835070237119"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.331131196505309369967922584065310494890", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.331131196505309369967922584065310494890"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.79525582879627301225536659480803023336", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.79525582879627301225536659480803023336"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.249404516468709022103298368762340791245", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.249404516468709022103298368762340791245"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.148672602024447894354071561047112702722", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.148672602024447894354071561047112702722"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.297657561168059865937073676198746357549", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.297657561168059865937073676198746357549"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.79959511283195606168108838593764990357", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.79959511283195606168108838593764990357"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.12181218696773505261610344669239877997", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.12181218696773505261610344669239877997"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.44016378110124480753382101873789746584", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.44016378110124480753382101873789746584"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.262140674366616291957520659969689799745", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.262140674366616291957520659969689799745"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.29171872502655886851585593434125289620", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.29171872502655886851585593434125289620"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.284760478996852702973703359031806643767", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.284760478996852702973703359031806643767"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.339767760114050807164129338331281703587", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.339767760114050807164129338331281703587"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.39687916694928014940377800888691200142", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.39687916694928014940377800888691200142"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.191673935644190628295928690330231030013", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.191673935644190628295928690330231030013"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.259598666695126728515803051266073690786", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.259598666695126728515803051266073690786"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.102814648002759477214381135520243330242", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.102814648002759477214381135520243330242"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.31781261899858196031216304231476115056", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.31781261899858196031216304231476115056"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.70638890549882760929861353864814605263", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.70638890549882760929861353864814605263"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.164454610484433208240477675907692792352", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.164454610484433208240477675907692792352"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.131992311734794896315210597447772006904", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.131992311734794896315210597447772006904"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.39906916508187408444956764999113410835", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.39906916508187408444956764999113410835"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.142512207654272310631796939142439940446", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.142512207654272310631796939142439940446"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.333443362515833761068853911474666317528", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.333443362515833761068853911474666317528"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.25317999889997231083363499699589877018", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.25317999889997231083363499699589877018"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.168308153389920923142279490420600550633", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-5423859857\nSeries: 1.3.6.1.4.1.9328.50.7.168308153389920923142279490420600550633"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.188150766358167529478458898579637135262", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.188150766358167529478458898579637135262"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.193715029555405817113114393511379923022", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.193715029555405817113114393511379923022"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.252405260281632286102100322342372562629", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.252405260281632286102100322342372562629"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.230119312665956757099613872111624026018", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.230119312665956757099613872111624026018"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.144719845716102740998770027307985165443", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.144719845716102740998770027307985165443"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.47451903658096324072516671620782606547", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2382137773\nSeries: 1.3.6.1.4.1.9328.50.7.47451903658096324072516671620782606547"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.29876617245567003730299995787134295069", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1125105682\nSeries: 1.3.6.1.4.1.9328.50.7.29876617245567003730299995787134295069"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.261772317324041365541450388603508531852", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.261772317324041365541450388603508531852"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.283160137002360917619750682046124264354", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.283160137002360917619750682046124264354"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.217978084983544707619627794066948291967", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-1627409910\nSeries: 1.3.6.1.4.1.9328.50.7.217978084983544707619627794066948291967"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.9328.50.7.321446612661984907899823865234605992349", "label": "MR", "shape": "dot", "title": "PatientID: RIDER-2217584661\nSeries: 1.3.6.1.4.1.9328.50.7.321446612661984907899823865234605992349"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

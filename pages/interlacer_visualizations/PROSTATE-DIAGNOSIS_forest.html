@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.222670508954246125855524820719", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0012\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.222670508954246125855524820719"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4793.2002.520666648839310237528102714449", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-02-0002\nSeries: 1.3.6.1.4.1.14519.5.2.1.4793.2002.520666648839310237528102714449"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.490457061554419676898069946185", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0048\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.490457061554419676898069946185"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.231538661984558819374956544745", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.231538661984558819374956544745"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.168957052099961979380183161439", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0081\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.168957052099961979380183161439"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4794.2002.117396931759662483122259897547", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-03-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.4794.2002.117396931759662483122259897547"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.322088999221149093357599327010", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0057\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.322088999221149093357599327010"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.261957207190950679896408368004", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0029\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.261957207190950679896408368004"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.351506830770541731336685932327", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0005\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.351506830770541731336685932327"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.141390060439549754968061238051", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0031\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.141390060439549754968061238051"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.175655724777850129361575274382", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0028\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.175655724777850129361575274382"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.330916021870307879105983554883", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0020\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.330916021870307879105983554883"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.288964290939955886134869484363", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0056\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.288964290939955886134869484363"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.301187560280131363228956228512", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0051\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.301187560280131363228956228512"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.298683091768800609132831068502", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0070\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.298683091768800609132831068502"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.228114490996225942058086425805", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0049\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.228114490996225942058086425805"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.315500046717708004469324123389", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0024\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.315500046717708004469324123389"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.137956770522326851616178526259", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0043\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.137956770522326851616178526259"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.523592568102509675900287398622", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0063\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.523592568102509675900287398622"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.548594553994577317322914624600", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0065\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.548594553994577317322914624600"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.711425877448058449703165435126", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0046\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.711425877448058449703165435126"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.168634652125919398758381046531", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0036\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.168634652125919398758381046531"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.110035730183019192646975113182", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0080\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.110035730183019192646975113182"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.239745692969312974757081064337", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0003\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.239745692969312974757081064337"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.307082999458222300408384358590", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0026\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.307082999458222300408384358590"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.756087877889484926930899765315", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.756087877889484926930899765315"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.204800216092413350684387551956", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0044\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.204800216092413350684387551956"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.335049705835299469502148289886", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0073\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.335049705835299469502148289886"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.288142407336931899707413731235", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0047\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.288142407336931899707413731235"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.249028522680041627184012861311", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0013\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.249028522680041627184012861311"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.134600853307327773628207704283", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0015\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.134600853307327773628207704283"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.150343726012396704043830373304", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0041\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.150343726012396704043830373304"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.374103389997445025478257817439", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0080\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.374103389997445025478257817439"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.336279950290069339722236899086", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0041\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.336279950290069339722236899086"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.174389471689336198943377179828", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0033\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.174389471689336198943377179828"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.602306478149735272752089070548", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0011\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.602306478149735272752089070548"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.668979156479328751898748771987", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0027\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.668979156479328751898748771987"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.124599577323808262243929634935", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0010\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.124599577323808262243929634935"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4794.2002.193772467838323259401696301086", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-03-0004\nSeries: 1.3.6.1.4.1.14519.5.2.1.4794.2002.193772467838323259401696301086"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.210239011074659980220241257937", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0056\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.210239011074659980220241257937"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4794.2002.157232288114715709941726879170", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-03-0004\nSeries: 1.3.6.1.4.1.14519.5.2.1.4794.2002.157232288114715709941726879170"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.190929740208172502945090761608", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0046\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.190929740208172502945090761608"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.153011800100062944498372109242", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0071\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.153011800100062944498372109242"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.133043991594134296097684449413", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0051\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.133043991594134296097684449413"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.149038405026451162329568884440", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0078\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.149038405026451162329568884440"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.233470901341719714648314743720", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0020\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.233470901341719714648314743720"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.102601087251287660959382312604", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0007\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.102601087251287660959382312604"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4794.2002.778333602240440712239598993798", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-03-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.4794.2002.778333602240440712239598993798"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4792.2002.207530031574184948608036542376", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-01-0025\nSeries: 1.3.6.1.4.1.14519.5.2.1.4792.2002.207530031574184948608036542376"}, {"color": "#ff7f0e", "id": "1.3.6.1.4.1.14519.5.2.1.4794.2002.209663928312609746750413241615", "label": "MR", "shape": "dot", "title": "PatientID: ProstateDx-03-0001\nSeries: 1.3.6.1.4.1.14519.5.2.1.4794.2002.209663928312609746750413241615"}]);
+                  edges = new vis.DataSet([]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
