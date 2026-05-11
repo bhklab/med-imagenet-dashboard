@@ -9,7 +9,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from pages.data import dataset_summary, get_store, load_all_indexes
+from pages.data import dataset_summary, get_store, load_index_dataset
 
 _INTERLACER_DIR = Path(__file__).resolve().parent / "interlacer_visualizations"
 
@@ -243,8 +243,7 @@ def run() -> None:
     selected_dataset = _collection_picker(summary, query_dataset)
 
     if selected_dataset:
-        df = load_all_indexes()
-        ds_df = df[df["dataset"] == selected_dataset] if not df.empty else pd.DataFrame()
+        ds_df = load_index_dataset(selected_dataset)
         if ds_df.empty:
             st.warning(
                 f"No index data found for **{selected_dataset}**. "

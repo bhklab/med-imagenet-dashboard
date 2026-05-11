@@ -7,6 +7,8 @@ centrally.
 
 from __future__ import annotations
 
+from collections import defaultdict
+
 import pandas as pd
 import streamlit as st
 
@@ -20,27 +22,91 @@ def get_store() -> IndexedDatasets:
     return IndexedDatasets(force_download=True)
 
 
-@st.cache_data(show_spinner="Loading index data …")
-def load_all_indexes() -> pd.DataFrame:
-    """Read every collection index, tag with dataset name, normalise columns."""
+def _tag_index_frame(store: IndexedDatasets, collection: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Insert ``dataset`` and ``format`` columns (mutates a copy)."""
+    out = df.copy()
+    out.insert(0, "dataset", collection)
+    fmt = "NIfTI" if store.file_type(collection) == FileType.NIFTI else "DICOM"
+    out.insert(1, "format", fmt)
+    return out
+
+
+@st.cache_data(show_spinner="Loading index …")
+def load_index_dataset(collection: str) -> pd.DataFrame:
+    """Load one collection index (cached per collection)."""
     store = get_store()
-    frames: list[pd.DataFrame] = []
+    try:
+        df = store.index(collection)
+    except Exception:
+        return pd.DataFrame()
+    return _tag_index_frame(store, collection, df)
 
-    for collection in store.collections:
-        try:
-            df = store.index(collection)
-        except Exception:
-            continue
 
-        df.insert(0, "dataset", collection)
-        fmt = "NIfTI" if store.file_type(collection) == FileType.NIFTI else "DICOM"
-        df.insert(1, "format", fmt)
-
-        frames.append(df)
-
+def load_indexes_datasets(collections: list[str]) -> pd.DataFrame:
+    """Concatenate indexes for the given collection names (each slice may hit ``load_index_dataset`` cache)."""
+    frames = [load_index_dataset(name) for name in collections]
+    frames = [f for f in frames if not f.empty]
     if not frames:
         return pd.DataFrame()
     return pd.concat(frames, ignore_index=True)
+
+
+def load_all_indexes() -> pd.DataFrame:
+    """Read every collection index into one frame (not cached as a whole — prefer ``load_index_dataset``)."""
+    store = get_store()
+    return load_indexes_datasets(list(store.collections))
+
+
+def modality_distribution_from_summary() -> pd.DataFrame:
+    """Approximate modality image counts from ``collections_summary`` only (no index I/O)."""
+    summary_data = load_summary()
+    counts: defaultdict[str, float] = defaultdict(float)
+    for info in summary_data.values():
+        imgs = float(info.get("Images", 0) or 0)
+        raw = info.get("Modalities") or []
+        if isinstance(raw, str):
+            mods = [p.strip() for p in raw.replace(";", ",").split(",") if p.strip()]
+        else:
+            mods = [str(m).strip() for m in raw if str(m).strip()]
+        if not mods or imgs <= 0:
+            continue
+        share = imgs / len(mods)
+        for m in mods:
+            counts[m] += share
+    if not counts:
+        return pd.DataFrame(columns=["Modality", "count"])
+    rows = [
+        {"Modality": name, "count": max(1, int(round(val)))}
+        for name, val in sorted(counts.items(), key=lambda x: -x[1])
+    ]
+    return pd.DataFrame(rows)
+
+
+def home_summary_kpis() -> dict[str, int | float]:
+    """Dashboard KPIs from summary JSON only (avoids loading per-image indexes on the home page)."""
+    summary_data = load_summary()
+    n_collections = len(summary_data)
+    n_images = sum(int(info.get("Images", 0) or 0) for info in summary_data.values())
+    total_gb = float(sum(float(info.get("Size", 0) or 0) for info in summary_data.values()))
+    n_patients = sum(int(info.get("Patients", 0) or 0) for info in summary_data.values())
+    seen: set[str] = set()
+    for info in summary_data.values():
+        raw = info.get("Modalities") or []
+        if isinstance(raw, str):
+            for part in raw.replace(";", ",").split(","):
+                p = part.strip()
+                seen.add(p)
+        else:
+            for m in raw:
+                seen.add(str(m))
+    n_modalities = len(seen)
+    return {
+        "collections": n_collections,
+        "total_images": n_images,
+        "unique_patients": n_patients,
+        "modalities": n_modalities,
+        "total_size_gb": total_gb,
+    }
 
 
 @st.cache_data(show_spinner="Loading collections summary …")

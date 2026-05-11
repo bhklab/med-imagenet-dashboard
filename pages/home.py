@@ -5,7 +5,12 @@ from __future__ import annotations
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from pages.data import dataset_summary, get_store, load_all_indexes, load_summary
+from pages.data import (
+    dataset_summary,
+    get_store,
+    home_summary_kpis,
+    modality_distribution_from_summary,
+)
 
 ACCENT = "#4A90D9"
 
@@ -30,31 +35,24 @@ def _hero() -> None:
     )
 
 
-def _kpi_row(df: pd.DataFrame) -> None:
+def _kpi_row(kpis: dict[str, int | float]) -> None:
     col1, col2, col3, col4, col5 = st.columns(5)
 
-    n_datasets = df["dataset"].nunique()
-    n_images = len(df)
-    n_patients = df["PatientID"].nunique() if "PatientID" in df.columns else 0
-    n_modalities = df["Modality"].nunique() if "Modality" in df.columns else 0
-
-    col1.metric("Collections", f"{n_datasets:,}")
-    col2.metric("Total Images", f"{n_images:,}")
-    col3.metric("Unique Patients", f"{n_patients:,}")
-    col4.metric("Modalities", f"{n_modalities:,}")
-
-    summary_data = load_summary()
-    total_gb = sum(info.get("Size", 0) for info in summary_data.values())
-    col5.metric("Total Size", f"{total_gb:,.1f} GB")
+    col1.metric("Collections", f"{int(kpis['collections']):,}")
+    col2.metric("Total Images", f"{int(kpis['total_images']):,}")
+    col3.metric("Unique Patients", f"{int(kpis['unique_patients']):,}")
+    col4.metric("Modalities", f"{int(kpis['modalities']):,}")
+    col5.metric("Total Size", f"{float(kpis['total_size_gb']):,.1f} GB")
 
 
-def _modality_snapshot(df: pd.DataFrame) -> None:
-    if "Modality" not in df.columns or df["Modality"].dropna().empty:
+def _modality_snapshot(mod_counts: pd.DataFrame) -> None:
+    if mod_counts.empty or "Modality" not in mod_counts.columns:
         return
 
     st.subheader("Modality snapshot")
-    mod_counts = df["Modality"].value_counts().reset_index()
-    mod_counts.columns = ["Modality", "count"]
+    st.caption(
+        "Counts are estimated from collection summaries (split evenly across listed modalities per collection)."
+    )
 
     c1, c2 = st.columns([1, 2])
     with c1:
@@ -148,11 +146,10 @@ def _quick_links() -> None:
 
 
 def run() -> None:
-    df = load_all_indexes()
     _hero()
-    _kpi_row(df)
+    _kpi_row(home_summary_kpis())
     st.markdown("")
-    _modality_snapshot(df)
+    _modality_snapshot(modality_distribution_from_summary())
     _top_datasets_table()
     _quick_links()
 
