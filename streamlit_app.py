@@ -45,6 +45,17 @@ st.markdown(
     [data-testid="stVerticalBlock"] > div:has(> [data-testid="stContainer"]) {
         border-radius: .6rem;
     }
+
+    /* Home — feedback survey link button (green; ``key="home_feedback_survey"`` in ``pages/home.py``) */
+    div.st-key-home_feedback_survey a {
+        background-color: #15803d !important;
+        color: #ffffff !important;
+        border: 1px solid #166534 !important;
+    }
+    div.st-key-home_feedback_survey a:hover {
+        filter: brightness(1.06);
+        border-color: #14532d !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,

@@ -88,7 +88,6 @@ def home_summary_kpis() -> dict[str, int | float]:
     n_collections = len(summary_data)
     n_images = sum(int(info.get("Images", 0) or 0) for info in summary_data.values())
     total_gb = float(sum(float(info.get("Size", 0) or 0) for info in summary_data.values()))
-    n_patients = sum(int(info.get("Patients", 0) or 0) for info in summary_data.values())
     seen: set[str] = set()
     for info in summary_data.values():
         raw = info.get("Modalities") or []
@@ -103,7 +102,6 @@ def home_summary_kpis() -> dict[str, int | float]:
     return {
         "collections": n_collections,
         "total_images": n_images,
-        "unique_patients": n_patients,
         "modalities": n_modalities,
         "total_size_gb": total_gb,
     }
