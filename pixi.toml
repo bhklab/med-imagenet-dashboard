@@ -12,10 +12,9 @@ combine-panels = "python scripts/combine_modality_sources_panel.py"
 python = ">=3.13,<3.14"
 
 [pypi-dependencies]
-med-imagenet = { git = "https://github.com/bhklab/med-imagenet.git", branch = "JoshuaSiraj/refactor-query" }
-nbia-toolkit = { git = "https://github.com/bhklab/nbia-toolkit.git", branch = "JoshuaSiraj/test-imgnet-pipeline" }
 streamlit = ">=1.54.0, <2"
 google-adk = ">=1.26.0, <2"
 plotly = ">=6.6.0, <7"
 qrcode = ">=8.0, <9"
 pillow = ">=10.0, <13"
+med-imagenet = ">=0.4.0, <0.5"
